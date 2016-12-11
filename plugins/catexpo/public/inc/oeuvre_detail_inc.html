@@ -1,0 +1,97 @@
+#SET{dimensions,357}
+
+<BOUCLE_oeuvre_detail(OEUVRES) {id_oeuvre=#ID_OEUVRE}>
+[(#SET{oeuvres_liees,''})]
+[(#ID_OEUVRES_LIEES|unserialize|is_array|oui) [(#SET{oeuvres_liees,[(#ID_OEUVRES_LIEES|unserialize|nettoyer_array_picker)]})] ]
+#SET{z-index,51}
+#SET{img_check,#ARRAY}
+	<li id="oeuvre|#ID_OEUVRE" class="oeuvre_detail clearfix">
+	<div class="toile_thumb clearfix" style="">
+	<B_documents_oeuvres>
+		<a href="[(#URL_PAGE{oeuvre_public,id_oeuvre=#ID_OEUVRE}|parametre_url{mode,inventaire}|parametre_url{unique,[(#VAL{''}|time)]}|parametre_url{var_mode,recalcul})]" class="mediabox" style="display:block; width:#GET{dimensions} px;">
+	<BOUCLE_documents_oeuvres(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version}>
+		#SET{z-index,#GET{z-index}|moins{1}}
+		[(#SET{rapport,[(#HAUTEUR|div{#LARGEUR})]})]
+		[(#SET{height,#GET{dimensions}})] [(#SET{width,[(#GET{dimensions}|div{#GET{rapport}}|round)]})]
+		[(#GET{width}|>={#GET{dimensions}}|?{#SET{width,#GET{dimensions}}#SET{height,#GET{dimensions}|mult{#GET{rapport}}|round}})]	
+		<div class="img_superpose toile_thumb" 
+			style="[(#COMPTEUR_BOUCLE|!={1}|oui) margin-top:-#GET{dimensions}  px;] z-index:#GET{z-index}"
+			data-highlight="version_[(#VERSION|supprimer_numero)]">
+			#SET{fichier,#FICHIER|image_reduire{#GET{dimensions},#GET{dimensions}}|extraire_attribut{src}}
+			<!--	Attention : ne pas laisser d'espace entre helper et img-->
+			<span class="vertical_helper"></span><img class="spip_logos img_postLoader" data-url="#GET{fichier}" src="" width="#GET{width}" height="#GET{height}"/></span><br/>
+					[(#VERSION|match{REF}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,REF}}}]
+					[(#VERSION|match{fluo1}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,fluo}}}]
+					[(#VERSION|match{rouge}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,rouge}}}]
+					[(#VERSION|match{or}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,or}}}]
+					[(#VERSION|match{vert}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,vert}}}]
+					[(#SET{dispositif,#DISPOSITIF})]
+		</div>
+	</BOUCLE_documents_oeuvres>
+		[(#GET{dispositif}|=={compact}|ou{#GET{dispositif}|=={compact_}}|oui) <div class="img_superpose toile_thumb low_fi_medium" style="[(#GET{dispositif}|=={compact_}|oui) opacity:.7;] margin-top:-#GET{dimensions}px; z-index:52"><img width="#GET{dimensions}px" height="#GET{dimensions}px" src="plugins/catexpo/images/low_fi_icon_medium.png"/></div>]
+		</a>
+	</B_documents_oeuvres>
+		<div class="img_superpose">
+			<img src="plugins-dist/medias/prive/vignettes/png.png"/>
+		</div>
+	<//B_documents_oeuvres>
+	
+	<B_img_check>
+		<div class="img_check_dia">
+	<BOUCLE_img_check(DATA) {source tableau, #GET{img_check}}>
+			<div data-highlight="selector_version_[(#VALEUR|table_valeur{0}|supprimer_numero)]" data-id="imgcheck_id_#_oeuvres:CLE" class="img_check_dia_color [(#VALEUR|table_valeur{1})]"></div>
+	</BOUCLE_img_check>
+		</div>
+	</B_img_check>
+	
+		<div class="caracteristiques_toile">
+			<div class="infos_techniques_toile important">[(#TECHNIQUE)]</div>
+			 sur <div class="infos_techniques_toile important">[(#SUPPORT)]</div>, 
+			 	<div class="infos_techniques_toile important">[(#HAUTEUR) m] / [(#LARGEUR) m], </div>
+				[<div class="infos_techniques_toile important">(#OEUVRE_INACHEVEE|oui) Oeuvre_inachev�e, </div>]
+				[<div class="infos_techniques_toile important">(#CHASSIS|=={Oui}|oui) Mont�e sur Chassis, </div>]
+				[<div class="infos_techniques_toile important">(#CADRE|=={Oui}|oui) Encadr�e, </div>]
+				<div class="infos_techniques_toile important">[(#LOCALISATION)]</div><br/>
+		</div>
+	</div>
+		<div class="descriptif_toile clearfix">
+		<div class="editorial_toile">
+			<label>Titre : </label><div class="infos_toile even titre #EDIT{titre}" style="[(#COMPTEUR_BOUCLE|=={1}|oui) margin-top: px;]">[(#TITRE)]</div><br/>
+			<label>Titre alternatif (fluo, dos, etc.) : </label><div class="infos_toile odd #EDIT{titre_secret}">#TITRE_SECRET</div><br/>
+			<label>Date de réalisation : </label><div class="infos_toile even  titre #EDIT{date_real}">[(#DATE_REAL|=={0000-00-00 00:00:00}|?{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,[(#DATE_REAL|annee)]})]</div><br/>
+			<label>ou approx. entre l'année </label><div class="infos_toile odd #EDIT{date_estimee_debut}">[(#DATE_ESTIMEE_DEBUT|=={0000-00-00 00:00:00}|?{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,[(#DATE_ESTIMEE_DEBUT|annee)]})]</div><br/>
+			<label>(optionnel) : et l'année </label><div class="infos_toile odd #EDIT{date_estimee_fin}">[(#DATE_ESTIMEE_FIN|=={0000-00-00 00:00:00}|?{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,[(#DATE_ESTIMEE_FIN|annee)]})]</div><br/>
+			<label>Notice : </label><div class="infos_toile odd notice_champ #EDIT{notice_courte}">[(#NOTICE_COURTE)]</div><br/>
+		</div>
+		<div class="nomenclature_toile">
+			<label>Numéro d'inventaire : </label><div class="infos_toile nomenc even ">[(#NUMERO_INVENTAIRE)]</div><br/>
+			<label>Signature : </label><div class="infos_toile nomenc odd" >[(#VAL{[(#SIGNATURE_PLACEMENT|=={Non}|?{Non,[<span class="signature_toile #EDIT{signature_mention}">(#SIGNATURE_MENTION)</span>]})]}|trim)]</div><br/>
+			<label>Thématique : </label><div class="infos_toile nomenc even  titre #EDIT{thematique}">[(#THEMATIQUE)]</div><br/>
+			<label>Période : </label><div class="infos_toile nomenc odd important #EDIT{periode}">[(#PERIODE)]</div><br/>
+			<label>Publications : </label><div class="infos_toile nomenc publications even #EDIT{publications}">[(#PUBLICATION)]</div><br/>
+		</div>
+		<div class="nomenclature_toile" style="max-width:357px; float:left; margin-left : 24px;">
+		[(#GET{oeuvres_liees}|is_array|oui)<div>&#338;uvres connexes : </div>]
+		<B_oeuvres_liees>							
+		<BOUCLE_oeuvres_liees(OEUVRES) {si #GET{oeuvres_liees}|is_array} {id_oeuvre IN #GET{oeuvres_liees}}>
+			[(#SET{logo_oeuvre,''})]
+			<BOUCLE_vignette(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version} {0,1}>
+				[(#SET{logo_oeuvre,[(#LOGO_DOCUMENT)]})]
+			</BOUCLE_vignette>
+			<div class="oeuvre_vignette" style="height:auto; margin:12px 15px;">
+				<a href="[(#URL_PAGE{oeuvre_public,id_oeuvre=#ID_OEUVRE}|parametre_url{mode,inventaire}|parametre_url{unique,[(#VAL{''}|time)]})]" class="mediabox" title="#NUMERO_INVENTAIRE">
+				#GET{logo_oeuvre}
+				</a><br/>
+				[(#TITRE|sinon{#TITRE_SECRET})]
+				[(#REM) [(#TITRE|match{Mod�le}|oui)] ]<br/>
+				<a class="mediabox compare_link" href="[(#URL_PAGE{oeuvre_public,id_oeuvre=#ID_OEUVRE}|parametre_url{mode,compare}|parametre_url{unique,[(#EVAL{time()})]})]&compare\[\]=#_oeuvre_detail:ID_OEUVRE&compare\[\]=#ID_OEUVRE">
+					<h5>comparer</h5>
+				</a>
+				
+			</div>
+		</BOUCLE_oeuvres_liees>
+		</B_oeuvres_liees>
+		</div>
+		</div>
+	</li>
+</BOUCLE_oeuvre_detail>

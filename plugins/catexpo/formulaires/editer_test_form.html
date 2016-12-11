@@ -1,0 +1,23 @@
+
+<form enctype="" action="#ENV{action}" method="post">
+#ACTION_FORMULAIRE{#ENV{action}}
+<!--With "multiple" attribute-->
+
+<input type="hidden" value="#ENV{id_notice1}" name="id_notice1[]"></input>
+
+<input type="hidden" value="#ENV{id_notice2}" name="id_notice2[]"></input>
+
+<input type="hidden" value="#ENV{id_notice3}" name="id_notice3[]"></input>
+
+
+<!--Without "multiple" attribute-->
+
+<input type="hidden" value="#ENV{id_notice4}" name="id_notice4"></input>
+
+<input type="hidden" value="#ENV{id_notice5}" name="id_notice5"></input>
+
+<input type="hidden" value="#ENV{id_notice6}" name="id_notice6"></input>
+
+<input type="submit"/>
+
+</form>

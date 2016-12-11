@@ -1,0 +1,10 @@
+<BOUCLE_cat(OEUVRES){tout}{id_oeuvre=#ENV{id_objet}}{statut?}>
+	<div class="chemin">
+		<a href="[(#SELF|parametre_url{objet,racine}|parametre_url{id_objet,0})]" class="ajax nohistory">[(#ENV{label_racine,<:info_racine_site:>})]</a><span class="sep divider">
+		&gt; </span><BOUCLE_chemin(HIERARCHIE){id_catalogue}><a href="[(#SELF|parametre_url{id_objet,#ID_OEUVRE})]" class="ajax nohistory">[(#TITRE|sinon{#TITRE_SECRET})]</a><span class="sep divider">
+		&gt; </span></BOUCLE_chemin><h3 class="on">[(#TITRE|sinon{#TITRE_SECRET})]</h3>
+	</div>
+	<div class="liste">
+		#INCLURE{fond=formulaires/selecteur/lister, quoi=oeuvres, id_oeuvre, env}
+	</div>
+</BOUCLE_cat>

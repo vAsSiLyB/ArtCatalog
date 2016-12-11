@@ -1,0 +1,172 @@
+[(#CACHE{0})]
+#SET{data_numeros_ordre,#ENV{id_catalogue}|trouver_numeros_ordre}
+#SET{oeuvres_par_criteres,#GET{data_numeros_ordre}|table_valeur{0}}
+#SET{data_oeuvres,#GET{data_numeros_ordre}|table_valeur{1}}
+#SET{params_oeuvres,#GET{data_numeros_ordre}|table_valeur{2}}
+#SET{anchors,#ARRAY}
+#SET{tableau_date,#ARRAY}
+
+[(#SESSION{statut}|couper{1}|<={1}|oui)
+
+<span id="top"></span>
+
+<div id="catalogue_liste_inc">
+
+		<BOUCLE_criteres(DATA) {source tableau, #GET{oeuvres_par_criteres}} {inverse}>
+			[(#ENV{tri}|=={nomenc}|ou{#ENV{tri}|non}|oui)
+				[(#SET{anchor,[(#GET{params_oeuvres}|table_valeur{#CLE}|table_valeur{constantes}|implode{', '})]})]
+				#SET{anchors, #GET{anchors}|push{#GET{anchor}}}
+			]
+			<B_oeuvres>
+				[(#ENV{tri}|=={nomenc}|ou{#ENV{tri}|non}|oui)<h2 id="#GET{anchor}" class="titre_cat">#GET{anchor}</h2>
+				<ul class="oeuvres_critere clearfix">]
+			<BOUCLE_oeuvres(DATA) {source tableau, #VALEUR} {si #GET{anchor}|=={Reggae}|ou{#GET{anchor}|=={Afrique}}}>
+				#SET{generer_table_dates,non}
+				
+				[(#SET{date_oeuvre,[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{date_real}|annee)]})]
+				[(#GET{date_oeuvre}|=={0000}|?{[(#SET{date_oeuvre,9999})]})]
+				[(#ENV{tri}|=={nomenc}|ou{#ENV{tri}|non}|?{
+					#SET{reste,#COMPTEUR_BOUCLE|modulo{20}}
+					[(#GET{reste}|=={0}|?{#SET{anchors,#GET{anchors}|push{#GET{anchor}_#COMPTEUR_BOUCLE|str_pad_left{3}}} <span id="#GET{anchor}_[(#COMPTEUR_BOUCLE|str_pad_left{3})]"></span>})]
+					[(#INCLURE{fond=public/inc/oeuvre_detail_inc, 
+						id_catalogue=#ENV{id_catalogue},
+						id_oeuvre=#CLE
+					})],
+					#SET{generer_table_dates,oui}
+				})]
+				[(#GET{generer_table_dates}|=={oui}|oui)
+					[(#GET{tableau_date}|table_valeur{date#GET{date_oeuvre}}|non)#SET{tableau_date,#GET{tableau_date}|array_merge{#ARRAY{date#GET{date_oeuvre},#ARRAY}}}]
+					#SET{tableau_date,#GET{tableau_date}|array_merge{#ARRAY{date#GET{date_oeuvre},#GET{tableau_date}|table_valeur{date#GET{date_oeuvre}}|push{#CLE}}}}
+				]
+			</BOUCLE_oeuvres>
+				[(#ENV{tri}|=={nomenc}|ou{#ENV{tri}|non}|oui)</ul>]
+			</B_oeuvres>
+		</BOUCLE_criteres>
+
+		<BOUCLE_criteres_date(DATA) {si #ENV{tri}|=={date}} {source tableau, #GET{tableau_date}|table_trier_cles}>
+			[(#SET{anchor,[- (#CLE|substr{4}) -]})]
+			[(#GET{anchor}|=={- 9999 -}|?{[(#SET{anchor,En attente de référencement})]})]
+			[(#COMPTEUR_BOUCLE|modulo{2}|=={1}|ou{#COMPTEUR_BOUCLE|=={#TOTAL_BOUCLE}}|oui)#SET{anchors, #GET{anchors}|push{#GET{anchor}}}]
+			<B_oeuvres_date>
+				<h2 id="#GET{anchor}" class="titre_cat">#GET{anchor}</h2>
+
+				<ul class="oeuvres_critere clearfix">
+			<BOUCLE_oeuvres_date(DATA) {source tableau, #VALEUR}>
+
+				#SET{reste,#COMPTEUR_BOUCLE|modulo{20}}
+				[(#GET{reste}|=={0}|?{#SET{anchors,#GET{anchors}|push{#GET{anchor}_#COMPTEUR_BOUCLE|str_pad_left{3}}} <span id="#GET{anchor}_[(#COMPTEUR_BOUCLE|str_pad_left{3})]"></span>})]
+
+				[(#INCLURE{fond=public/inc/oeuvre_detail_inc, 
+					id_catalogue=#ENV{id_catalogue},
+					id_oeuvre=#VALEUR
+				})]
+			</BOUCLE_oeuvres_date>
+				</ul>
+			</B_oeuvres_date>
+		</BOUCLE_criteres_date>
+</div>
+
+<div id="catalogue_menu">
+<BOUCLE_menus(DATA) {source tableau, #GET{anchors}}>
+	[(#COMPTEUR_BOUCLE|=={1}|?{<div id="info_preload">})]
+	[(#VALEUR|substr{-1,1}|!={0}|?{</div><div class="anchor_container">})]
+	[(#VALEUR|substr{-3,3}|=={020}|oui)<span class="glyphicon plus" style="float:right;">+</span><br/>][(#VALEUR|substr{-3,3}|=={120}|oui)<br/>]
+	<a class="[(#VALEUR|substr{-1,1}|=={0}|?{anchor_link_pagin, anchor_link})] [(#VALEUR|substr{-3,3}|=={020}|ou{[(#VALEUR|substr{-3,3}|=={120})]}ou{[(#VALEUR|substr{-3,3}|=={220})]}|oui) marge]" href="##VALEUR">
+	<span class="glyphicon" style="background-color:#007cbf;">&#xe041;</span>[(#VALEUR|substr{-1,1}|=={0}|?{[(#VALEUR|substr{-3,3}|ltrim{0})],&nbsp;[(#ENV{tri}|=={date}|?{[(#VALEUR|substr{0})],#VALEUR})]})]
+	</a>
+	[(#COMPTEUR_BOUCLE|=={#TOTAL_BOUCLE}|?{</div>})]
+</BOUCLE_menus>
+</div>
+<div class="bandeau_nav">
+	<h1 class="grostitre">#INFO_TITRE{catalogue,#ENV{id_catalogue}}</h1>
+	<div style="margin:5px 12px 0 12px">
+		
+		[<a class="logout_link" style="float:right;" href="#URL_LOGOUT">(#SESSION{id_auteur}|oui)<span >&#57699</span>Se déconnecter</a>]	
+		<h3 class="" [(#ENV{tri}|=={date}|?{ style="opacity:.12;">, ><a class="ajax_catalogue" href="[(#URL_PAGE{catalogue_public}|parametre_url{skel,liste}|parametre_url{id_catalogue,#ENV{id_catalogue}}|parametre_url{par,date})]" >})]<span class="glyphicon" style="background-color:#007cbf;">&#xe153;</span> Par date [(#ENV{tri}|=={date}|non)</a>]</h3>
+		<h3 class="" [(#ENV{tri}|=={nomenc}|ou{#ENV{tri}|non}|?{ style="opacity:.12;">, ><a class="ajax_catalogue" href="[(#URL_PAGE{catalogue_public}|parametre_url{skel,liste}|parametre_url{id_catalogue,#ENV{id_catalogue}})]" >})]<span class="glyphicon" style="background-color:#007cbf;">&#xe153;</span> Par thématique [(#ENV{tri}|=={nomenc}|ou{#ENV{tri}|non}|non)</a>]</h3>
+		<h3 class=""><a class="ajax_catalogue" href="[(#URL_PAGE{catalogue_public, id_catalogue=#ENV{id_catalogue}}|parametre_url{skel,vue}|parametre_url{nocache,[(#VAL{''}|time)]})]" ><span class="glyphicon" style="background-color:#007cbf;">&#xe011;</span> Grille</a></h3>
+		<div id="autres_cat_liste">
+			<h3 class=""><span class="glyphicon glyphicon-list" style="background-color:#007cbf;"></span> Autres catalogues </h3>
+			<div class="cat_liste">
+				<BOUCLE_catalogues(CATALOGUES){id_catalogue!=#ENV{id_catalogue}}>
+					<a style="margin-left:12px;" href="[(#URL_PAGE{catalogue_public}|parametre_url{skel,liste}|parametre_url{id_catalogue,#ID_CATALOGUE})]">
+						<div><span>&#57624</span>[(#TITRE|substr{13})]</div>
+					</a>
+				</BOUCLE_catalogues>
+			</div>
+		</div>
+	</div>
+</div>
+<a id="to_page_top" href="#top" title="Scroll to Top"></a>
+
+
+<script type="text/javascript">
+$(document).ready( function(){
+	
+	$('#catalogue_liste_inc').art_analyser({
+		oeuvres_selector:'.oeuvre_detail',
+		oeuvres_children_selector:'.img_superpose.toile_thumb',
+		acion_numeroter:false,
+		action_diapo_compare:false,
+		action_color_changer:true,
+		action_eZoom:false,
+		action_preloader:true
+	});
+	
+	$('#autres_cat_liste').bind('mouseover', function(e) {
+		$(this).find('.cat_liste').show();
+	})
+	.bind('mouseleave', function(e) {
+		$(this).find('.cat_liste').hide();
+	});
+	
+	$('.plus').click(function() {
+		$(this).parent().css('height','107px');
+	});
+	$('#to_page_top').click(function(e) {
+		e.originalEvent.preventDefault();
+		if (window.location.href.indexOf('#')!==-1) {
+			window.location.hash='';
+			// slice off the remaining '#' in HTML5:    
+			if (typeof window.history.replaceState == 'function') {
+			  history.replaceState({}, '', window.location.href.slice(0, -1));
+			}
+		}
+		document.getElementById('page').scrollIntoView();
+	});
+	var scroll_button=$('#to_page_top');
+	scroll_button.status='hidden';
+	window.onscroll=function(e) {
+		if ($(window).scrollTop()>window.innerHeight && scroll_button.status=='hidden') {
+			scroll_button.status='visible';
+			scroll_button.animate({'opacity':1}, {duration:500, queue:false});
+		}
+		else if ($(window).scrollTop()<window.innerHeight && scroll_button.status=='visible') {
+			scroll_button.status='hidden';
+			scroll_button.animate({'opacity':0}, {duration:500, queue:false});
+		}
+	};
+	
+});
+
+<!-- Mediabox  with onClosed callback -->
+var options = {
+		transition:box_settings.trans,
+		speed:box_settings.speed,
+		maxWidth:box_settings.maxW,
+		maxHeight:box_settings.maxH,
+		minWidth:box_settings.minW,
+		minHeight:box_settings.minH,
+		opacity:box_settings.opa,
+		slideshowSpeed:box_settings.ssSpeed,
+		slideshowStart:box_settings.str_ssStart,
+		slideshowStop:box_settings.str_ssStop,
+		current:box_settings.str_cur,
+		previous:box_settings.str_prev,
+		next:box_settings.str_next,
+		close:box_settings.str_close,
+		splash_url:box_settings.splash_url
+};
+$('.mediabox').colorbox(jQuery.extend({}, options, {fixed:true,slideshow:true,slideshowAuto:false,onClosed:function() {$(".zoomContainer").remove();}}));
+
+</script>

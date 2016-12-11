@@ -1,0 +1,21 @@
+<B_enfants>
+[<p class="pagination">(#PAGINATION{prive})</p>]
+<ul class="items">
+<BOUCLE_enfants(OEUVRES){id_catalogue}{pagination 10}{par numero_inventaire}>
+	<li class="rubrique">
+		<BOUCLE_vignette(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version} {0,1}>
+			[(#LOGO_DOCUMENT|image_reduire{51,44})]
+		</BOUCLE_vignette>
+		<a class="ouvrir ajax nohistory"
+			href="[(#SELF|parametre_url{objet,oeuvre}|parametre_url{id_objet,#ID_OEUVRE})]"
+		>[(#TITRE|sinon{#TITRE_SECRET})]</a>
+		[(#ENV{bouton_selectionner}|oui)<a
+			title="<:bouton_choisir:> : [(#TITRE|sinon{#TITRE_SECRET}|attribut_html|couper{80})]"
+			class="choisir"
+			href="#"
+			onclick="jQuery(this).item_pick('oeuvre|#ID_OEUVRE','#ENV{name,id_item}','[(#TITRE|sinon{#TITRE_SECRET})]','oeuvre');return false;"
+		><:bouton_choisir:></a>]
+	</li>
+</BOUCLE_enfants>
+</ul>
+</B_enfants>

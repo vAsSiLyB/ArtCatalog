@@ -1,0 +1,52 @@
+
+[(#REM)
+<!--	Beaucoup de choses sont déjà potentiellement traitées par php : -->
+<!--		on utilise trouver_numeros_ordre() plutôt que de lancer de nouvelles requêtes-->
+]
+
+#SET{activer,true}
+#SET{data_numeros_ordre,#ENV{id_catalogue}|trouver_numeros_ordre}
+
+#SET{oeuvres_par_criteres,#GET{data_numeros_ordre}|table_valeur{0}}
+#SET{data_oeuvres,#GET{data_numeros_ordre}|table_valeur{1}}
+#SET{params_oeuvres,#GET{data_numeros_ordre}|table_valeur{2}}
+
+[(#GET{params_oeuvres}|table_valeur{auto}|=={Oui}|non)
+	Vous devez avoir activé et paramétré l'inventaire automatique pour bénéficier de cette partie de la gestion
+	#SET{activer,false}
+]
+
+		<BOUCLE_criteres(DATA) {si #GET{activer}|=={true}} {source tableau, #GET{oeuvres_par_criteres}} >
+			<B_oeuvres>
+			<div class="">[(#GET{params_oeuvres}|table_valeur{#CLE}|table_valeur{constantes}|implode{', '})]</div>
+			
+			<ul class="oeuvres_critere clearfix">
+			<BOUCLE_oeuvres(DATA) {source tableau, #VALEUR}>
+				#SET{z-index,51}
+					<li id="oeuvre|#CLE" class="oeuvre_vignette">
+					<div class="oeuvre_vignette_edit">
+						<a href="[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#CLE}|parametre_url{redirect,[(#URL_ECRIRE{ordonner_inventaire,id_catalogue=#ENV{id_catalogue}})]})]" title="<:oeuvre:label_modifier_oeuvre:>"> <img src="../plugins/catexpo/prive/themes/spip/images/oeuvre-edit-16.png"/>
+						</a>
+					</div>
+					<BOUCLE_documents_oeuvres(DOCUMENTS) {id_oeuvre=#CLE}>
+						#SET{z-index,#GET{z-index}|moins{1}}
+						
+						<div class="img_superpose" style="[(#COMPTEUR_BOUCLE|!={1}|oui) margin:-90px 0 0 0;] z-index:#GET{z-index}">
+							<!--	Attention : ne pas laisser d'espace entre helper et img-->
+							<span class="vertical_helper"></span>#LOGO_DOCUMENT<br/>
+							[(#COMPTEUR_BOUCLE|=={1}|oui)
+								[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{numero_inventaire})]
+							]
+						</div>
+					</BOUCLE_documents_oeuvres>
+						<div class="img_superpose">
+							<img src="../plugins-dist/medias/prive/vignettes/png.png"/>
+							[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{numero_inventaire})]
+						</div>
+					<//B_documents_oeuvres>
+					</li>
+			</BOUCLE_oeuvres>
+			</ul>
+			</B_oeuvres>
+		</BOUCLE_criteres>
+

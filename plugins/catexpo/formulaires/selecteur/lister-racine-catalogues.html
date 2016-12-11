@@ -1,0 +1,18 @@
+<B_enfants>
+[<p class="pagination">(#PAGINATION{prive})</p>]
+<ul class="items">
+<BOUCLE_enfants(CATALOGUES){tout}{pagination 10}{par num titre, titre}>
+	<li class="rubrique">
+		<a
+			class="ouvrir ajax nohistory"
+			href="[(#SELF|parametre_url{objet,catalogue}|parametre_url{id_objet,#ID_CATALOGUE})]"
+		>#TITRE</a>[(#ENV{bouton_selectionner}|oui)<a
+			title="<:bouton_choisir:> : [(#TITRE|attribut_html|couper{80})]"
+			class="choisir"
+			href="#"
+			onclick="jQuery(this).item_pick('catalogue|#ID_CATALOGUE','#ENV{name,id_item}','#TITRE','catalogue');return false;"
+		><:bouton_choisir:></a>]
+	</li>
+</BOUCLE_enfants>
+</ul>
+</B_enfants>

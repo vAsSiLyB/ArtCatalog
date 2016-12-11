@@ -1,0 +1,5 @@
+UPDATE fluosystem_documents AS docs 
+LEFT JOIN fluosystem_documents_liens AS liens ON docs.id_document = liens.id_document 
+LEFT JOIN fluosystem_oeuvres AS oeuvres ON liens.id_objet = oeuvres.id_oeuvre 
+SET docs.media = 'dessin' 
+WHERE oeuvres.id_catalogue = "9"

@@ -1,0 +1,14 @@
+<div style="clear:left;">#FORMULAIRE_RECHERCHE_ECRIRE{#SELF,ajax}</div>
+<div class="nettoyeur"></div>
+
+[(#AUTORISER{creer,catalogue})
+	[(#URL_ECRIRE{catalogue_edit,new=oui}|icone_verticale{<:catalogue:icone_creer_catalogue:>,catalogue,new,right})]
+]
+
+<INCLURE{fond=prive/objets/liste/catalogues, env, par=id_catalogue, titre, ajax, sinon=<:catalogue:info_aucun_oeuvre:>}>
+
+<style>
+.formulaire_spip.formulaire_recherche {
+    float: left;
+}
+</style>

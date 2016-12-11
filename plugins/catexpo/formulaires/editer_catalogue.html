@@ -1,0 +1,120 @@
+[(#REM) [(#ENV**|unserialize|print_r{1})] ]
+<div class='formulaire_spip formulaire_editer formulaire_#FORM formulaire_#FORM-#ENV{id_oeuvre,nouveau}'>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+	<form method='post' action='#ENV{action}' enctype=""><div>
+		#ACTION_FORMULAIRE{#ENV{action}}
+		<ul>
+			<li class="editer_parent"><:catalogue:intertitre_identification:></li>
+			[(#SAISIE{input, titre, label=<:catalogue:label_titre:>})]
+			
+			<li>
+			[(#SAISIE{input, media, label=<:catalogue:label_media:>, explication=<:catalogue:explication_media:>})]
+			</li>
+			
+			<li>
+				<p class="explication"><:catalogue:explication_media2:></p>
+			</li>
+			
+			<li class="editer_parent"><:catalogue:intertitre_versions:></li>
+			[(#SAISIE{textarea, versions, label=<:catalogue:label_versions:>, explication=<:catalogue:explication_versions:>, rows=2})]
+			
+			<li class="editer_parent"><:catalogue:intertitre_nomenclature:></li>
+			
+			
+			[(#SET{index0,<:catalogue:label_nomenclature_utiliser:>})]
+			[(#SET{indexau,<:catalogue:label_nomenclature_auto:>})]
+			[(#SET{index1,<:catalogue:label_nomenclature_part1:>})]
+			[(#SET{index11,<:catalogue:label_nomenclature_part11:>})]
+			[(#SET{index12,<:catalogue:label_nomenclature_part12:>})]
+			[(#SET{indexa,<:catalogue:label_nomenclature_parta:>})]
+			[(#SET{indexb,<:catalogue:label_nomenclature_partb:>})]
+			[(#SET{indexc,<:catalogue:label_nomenclature_partc:>})]
+			[(#SET{indexd,<:catalogue:label_nomenclature_partd:>})]
+			[(#SET{indexe,<:catalogue:label_nomenclature_parte:>})]
+			[(#SET{indexn1,<:catalogue:label_nomenclature_partn1:>})]
+			[(#SET{indexn2,<:catalogue:label_nomenclature_partn2:>})]
+			[(#SET{index2,<:catalogue:label_nomenclature_part2:>})]
+			[(#SET{index3,<:catalogue:label_nomenclature_part3:>})]
+			[(#SET{index4,<:catalogue:label_nomenclature_part4:>})]
+			[(#SET{index5,<:catalogue:label_nomenclature_part5:>})]
+			
+			<li class="">
+			<label><:catalogue:label_nomenclature_existante:></label>
+			<p class="explication"><:catalogue:explication_nomenclature_existante:></p>
+			<p class="explication"><:catalogue:explication_nomenclature_existante2:></p>
+			</li>
+			<li class="">
+			<p class="explication"><:catalogue:explication_nomenclature_optionnelle:></p>
+			</li>
+			<li>
+			#GET{index1} : <input type="text" class="court" name="nomenclature_existante#GET{index1}" value="#ENV{nomenclature_existante#GET{index1}}"/>
+			#GET{index2} : <input type="text" class="court" name="nomenclature_existante#GET{index2}" value="#ENV{nomenclature_existante#GET{index2}}"/><br/>
+			#GET{index3} : <input type="text" class="court" name="nomenclature_existante#GET{index3}" value="#ENV{nomenclature_existante#GET{index3}}"/>
+			#GET{index4} : <input type="text" class="court" name="nomenclature_existante#GET{index4}" value="#ENV{nomenclature_existante#GET{index4}}"/>
+			</li>
+
+			<p class="explication"><b><:catalogue:label_nomenclature_stricte:></b> : <:catalogue:explication_nomenclature:></p>
+			
+			<li class="">
+			[<p class="erreur erreur_message">(#ENV**|unserialize|table_valeur{erreurs}|table_valeur{nomenclature_stricte})</p>]
+			<label><:catalogue:label_utiliser_nomenclature:></label>
+			<input type="radio" name="nomenclature_stricte[utiliser]" value="Oui" [(#ENV{nomenclature_stricte#GET{index0}}|=={Oui}|oui) checked="checked"]/> Oui</input><br/>
+			<input type="radio" name="nomenclature_stricte[utiliser]" value="Non" [(#ENV{nomenclature_stricte#GET{index0}}|=={Non}|oui) checked="checked"]/> Non</input>
+			</li>
+			
+			<li class="">
+			<p class="explication"><:catalogue:explication_nomenclature_optionnelle:></p>
+			</li>
+
+			<li>
+			<p class="explication"><:catalogue:explication_nomenclature_stricte2:></p>
+			#GET{index1} : <input type="text" class="court" name="nomenclature_stricte#GET{index1}" value="#ENV{nomenclature_stricte#GET{index1}}"/>
+			</li>
+			<li>
+			<p class="explication"><:catalogue:explication_nomenclature_stricte3:></p>
+			#GET{index11} : <select class="court" name="nomenclature_stricte#GET{index11}">
+								<option value=""></option>
+								<option value="#GET{indexa}" [(#ENV{nomenclature_stricte#GET{index11}}|=={#GET{indexa}} ) selected="selected"]><:oeuvre:label_thematique:></option>
+								<option value="#GET{indexb}" [(#ENV{nomenclature_stricte#GET{index11}}|=={#GET{indexb}} ) selected="selected"]><:oeuvre:label_technique:></option>
+								<option value="#GET{indexc}" [(#ENV{nomenclature_stricte#GET{index11}}|=={#GET{indexc}} ) selected="selected"]><:oeuvre:label_support:></option>
+								<option value="#GET{indexd}" [(#ENV{nomenclature_stricte#GET{index11}}|=={#GET{indexd}} ) selected="selected"]><:oeuvre:label_periode:></option>
+								<option value="#GET{indexe}" [(#ENV{nomenclature_stricte#GET{index11}}|=={#GET{indexe}} ) selected="selected"]><:oeuvre:label_date:></option>
+							</select>
+			#GET{indexn1} : <input class="text court" type="text" name="nomenclature_stricte#GET{indexn1}" value="#ENV{nomenclature_stricte#GET{indexn1}}"/>
+			</li>
+			<li>			
+			#GET{index12} : <select class="court" name="nomenclature_stricte#GET{index12}">
+								<option value=""></option>
+								<option value="#GET{indexa}" [(#ENV{nomenclature_stricte#GET{index12}}|=={#GET{indexa}} ) selected="selected"]><:oeuvre:label_thematique:></option>
+								<option value="#GET{indexb}" [(#ENV{nomenclature_stricte#GET{index12}}|=={#GET{indexb}} ) selected="selected"]><:oeuvre:label_technique:></option>
+								<option value="#GET{indexc}" [(#ENV{nomenclature_stricte#GET{index12}}|=={#GET{indexc}} ) selected="selected"]><:oeuvre:label_support:></option>
+								<option value="#GET{indexd}" [(#ENV{nomenclature_stricte#GET{index12}}|=={#GET{indexd}} ) selected="selected"]><:oeuvre:label_periode:></option>
+								<option value="#GET{indexe}" [(#ENV{nomenclature_stricte#GET{index12}}|=={#GET{indexe}} ) selected="selected"]><:oeuvre:label_date:></option>
+							</select>
+			#GET{indexn2} : <input class="text court" type="text" name="nomenclature_stricte#GET{indexn2}" value="#ENV{nomenclature_stricte#GET{indexn2}}"/>
+			</li>
+			<li>
+			<p class="explication"><:catalogue:explication_nomenclature_stricte4:></p>
+			#GET{index2} : <input type="text" class="court" name="nomenclature_stricte#GET{index2}" value="#ENV{nomenclature_stricte#GET{index2}}"/>
+			#GET{index3} : <input type="text" class="court" name="nomenclature_stricte#GET{index3}" value="#ENV{nomenclature_stricte#GET{index3}}"/>
+			</li>
+			<li>
+			<p class="explication"><:catalogue:explication_nomenclature_stricte5:></p>
+			#GET{index5} : <input type="text" class="court" name="nomenclature_stricte#GET{index5}" value="#ENV{nomenclature_stricte#GET{index5}}"/>
+			</li>
+			
+			<p class="explication"><:catalogue:explication_inventaire_auto:></p>
+			<li class="">
+			<label><:catalogue:label_utiliser_inventaire_auto:></label>
+			<input type="radio" name="nomenclature_stricte[auto]" value="Oui" [(#ENV{nomenclature_stricte#GET{indexau}}|=={Oui}|oui) checked="checked"]/> Oui</input><br/>
+			<input type="radio" name="nomenclature_stricte[auto]" value="Non" [(#ENV{nomenclature_stricte#GET{indexau}}|=={Non}|oui) checked="checked"]/> Non</input>
+			</li>
+			
+		</ul>
+		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+		<!--extra-->
+		<p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
+	</div></form>
+</div>

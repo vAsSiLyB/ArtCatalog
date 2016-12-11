@@ -1,0 +1,163 @@
+#SET{z-index,51}
+#SET{max_width,707}
+#SET{max_height,577}
+#SET{effect_array,#ARRAY}
+
+[(#ENV{mode}|=={fullscreen}|oui) #SET{max_width,1920} #SET{max_height,1080}]
+[(#ENV{mode}|=={inventaire}|oui) #SET{max_width,1280} #SET{max_height,720}]
+[(#ENV{mode}|=={compare}|oui) #SET{max_width,607} #SET{max_height,720}]
+#SET{img_check,#ARRAY}
+			{
+				"compos":{
+					"conteneur":{
+						"class":"oeuvre_container"
+						},
+					"mode":"#ENV{mode}",
+				<B_documents_oeuvres>
+					"versions_MAIN":{
+				<BOUCLE_documents_oeuvres(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version}>
+					#SET{z-index,#GET{z-index}|moins{1}}
+					[(#ENV{mode}|=={inventaire}|ou{[(#ENV{mode}|=={compare})]}|oui)
+						[(#VERSION|match{REF}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,REF}}}]
+						[(#VERSION|match{fluo1}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,fluo}}}]
+						[(#VERSION|match{rouge}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,rouge}}}]
+						[(#VERSION|match{or}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,or}}}]
+						[(#VERSION|match{vert}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,vert}}}]
+					]
+					
+					[(#SET{rapport,[(#HAUTEUR|div{#LARGEUR})]})]
+					[(#SET{height,#GET{max_height}})] [(#SET{width,[(#GET{max_height}|div{#GET{rapport}}|round{})]})]
+			
+					[(#GET{width}|>={#GET{max_width}}|?{[(#SET{width,#GET{max_width}})] [(#SET{height,[(#GET{width}|mult{#GET{rapport}}|round{})]})] })]
+					[(#ENV{appel_prive}|?{[(#SET{chemin_fichier,[../(#FICHIER|image_reduire{#GET{width},#GET{height}}|extraire_attribut{src})]})],[(#SET{chemin_fichier,[(#FICHIER|image_reduire{#GET{width},#GET{height}}|extraire_attribut{src})]})] })]
+					[(#SET{effect_array,[(#GET{effect_array}|push{ [(#ID_VIGNETTE)] })]})]
+			
+					"[(#COMPTEUR_BOUCLE|moins{1})]": {
+						"class":"img_superpose oeuvre_layers",
+						"version":"version_[(#VERSION|supprimer_numero)]",
+						"style":{
+							"z-index":"#GET{z-index}",
+							"margin":"-[(#GET{height})]px 0 0 0"
+							},
+						"fichier":"#GET{chemin_fichier}",
+						"width":"#GET{width}",
+						"height":"#GET{height}",
+						"zoom_wrapper":{
+							"class":"eZoom_container",
+							"style":{
+								"width":"#GET{width}px",
+								"margin":"0 0 0 [(#GET{max_width}|moins{#GET{width}}|div{2})]px"
+								}
+							},
+						"data_zoom_image":"[(#ENV{appel_prive}|?{[../(#FICHIER)],[(#FICHIER)]})]"
+						}[(#COMPTEUR_BOUCLE|!={#TOTAL_BOUCLE}|oui),]
+				</BOUCLE_documents_oeuvres>
+						},
+					"canvas":{
+						"id":"oeuvre_canvas_#ID_OEUVRE",
+						"width":"#GET{width}",
+						"height":"#GET{height}",
+						"style":{
+							"position":"relative",
+							"margin":"-[(#GET{height}|moins{2})]px 0 0 0",
+							"z-index":64
+							}
+						},
+				</B_documents_oeuvres>
+						
+					[(#SET{toile_height,[(#GET{height}|plus{[(#GET{height}|div{40})]}|round{})]})] [(#SET{toile_width,[(#GET{width}|plus{[(#GET{width}|div{64})]}|round{})]})]
+					"toile_support_helper":{
+						"class":"toile_support_helper oeuvre_layers",
+						"style":{
+							"margin":"0 0 0 [(#GET{toile_width}|>{#GET{toile_height}}|?{-[(#GET{toile_width}|div{151})]px,0})]"
+							}
+						},
+					"toile_support":{
+						"version":"version_REF_jour",
+						"class":"toile_support",
+						"style":{
+							"display":"[(#ENV{mode}|=={fullscreen}|?{none,block})]",
+							"z-index":"22", 
+							"width":"#GET{toile_width}px", 
+							"height":"#GET{toile_height}px", 
+							"margin":"-[(#GET{toile_height}|moins{[(#GET{toile_height}|div{59})]}|round{})]px 0 0 0",
+							"background-size": "[(#GET{toile_width}|plus{2})]px [(#GET{toile_height}|plus{2})]px"
+							}
+						},
+					"toile_support_fluo":{
+						"version":"version_fluo1",
+						"class":"toile_support fluo",
+						"style":{
+							"display":"none",
+							"z-index":"21", 
+							"width":"#GET{toile_width}px", 
+							"height":"#GET{toile_height}px", 
+							"margin":"-[(#GET{toile_height}|moins{[(#GET{toile_height}|div{64})]}|round{})]px 0 0 0",
+							"background-size": "[(#GET{toile_width}|plus{1})]px [(#GET{toile_height}|plus{1})]px"
+							}
+						},
+					
+					[(#SET{effect_height,[(#GET{height}|plus{180})]})] [(#SET{effect_width,[(#GET{width}|plus{357})]})]
+					"halo_effect":{
+						"pass_0":{
+							"class":"img_superpose fluo_transition effect_pass_0 [(#GET{width}|>{[(#GET{height}|plus{0})]}|non) offset_inverse]",
+							"style":{
+								"display":"none",
+								"opacity":"0",
+								"z-index":"77",
+								"height":"[(#GET{effect_height}|moins{59})]px",
+								"margin":"[(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-[(#GET{effect_height}|moins{59})]px,-[(#GET{effect_height}|moins{59})]px})] 0 0 [(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-84px,-44px})]"
+								},
+							"image":{
+								"fichier":"#CHEMIN{images/cellules_roses.png}",
+								"width":"[(#GET{effect_width}|moins{0})]",
+								"height":"[(#GET{effect_height}|moins{144})]",
+								"style":{
+									"margin":"0px"
+									}
+								}
+							},
+						"pass_1":{
+							"class":"img_superpose fluo_transition effect_pass_1 [(#GET{width}|>{[(#GET{height}|plus{0})]}|non) offset_inverse]",
+							"style":{
+								"display":"none",
+								"opacity":"0",
+								"z-index":"77",
+								"height":"[(#GET{effect_height}|moins{0})]px",
+								"margin":"[(#GET{width}|>{[(#GET{height}|plus{84})]}|?{-[(#GET{effect_height}|moins{0})]px,-[(#GET{effect_height}|moins{0})]px})] 0 0 [(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-177px,-101px})]"
+								},
+							"image":{
+								"fichier":"#CHEMIN{images/illum.png}",
+								"width":"[(#GET{effect_width}|moins{0})]",
+								"height":"[(#GET{effect_height}|plus{77})]",
+								"style":{
+									"margin":"0px"
+									}
+								}
+							}
+						},
+				<B_effect>
+				"fluo_transition":{
+				<BOUCLE_effect(DATA) {source array, #GET{effect_array}} {key IN 2,3,4,5}>
+					<BOUCLE_docs(DOCUMENTS) {id_document=#VALEUR} {tous}>
+					"[(#_effect:COMPTEUR_BOUCLE|moins{1})]": {
+						"version":"version_[(#VERSION|supprimer_numero)]",
+						"class":"img_superpose fluo_transition effect_pass_[(#_effect:COMPTEUR_BOUCLE|plus{1})] [(#GET{width}|>{[(#GET{height}|plus{0})]}|non) offset]",
+						"style":{
+							"display":"none",
+							"opacity":"0",
+							"z-index":"77",
+							"height":"[(#GET{effect_height}|plus{123})]px",
+							"margin":"[(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-[(#GET{effect_height}|plus{123})]px,-[(#GET{effect_height}|plus{123})]px})] 0 0 [(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-170px,-127px})]"
+							},
+						"fichier":"[(#FICHIER|image_flou{10}|image_masque{plugins/highlight/images/effect_mask_micro_#_effect:COMPTEUR_BOUCLE.png}|extraire_attribut{src})]",
+						"width":"#GET{effect_width}",
+						"height":"[(#GET{effect_height}|moins{21})]"
+						}
+					</BOUCLE_docs>
+					[(#COMPTEUR_BOUCLE|!={#TOTAL_BOUCLE}|oui),]
+				</BOUCLE_effect>
+					}
+				</B_effect>
+				}
+			}

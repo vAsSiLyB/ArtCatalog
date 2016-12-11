@@ -1,0 +1,50 @@
+[(#AUTORISER{voir,oeuvre,#ID_OEUVRE}|sinon_interdire_acces)]
+<BOUCLE_oeuvre(OEUVRES){id_oeuvre}{si #ENV{exec}|=={oeuvre}}>
+
+[(#SET{redirect,#URL_ECRIRE{oeuvre, id_oeuvre=#ID_OEUVRE}})]
+
+[(#BOITE_OUVRIR{[
+	[(#AUTORISER{modifier,oeuvre,#ID_OEUVRE})
+		[(#ID_OEUVRE|afficher_qui_edite{oeuvre}|non)
+			[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#ID_OEUVRE}|icone_verticale{<:oeuvre:icone_modifier_oeuvre:>,oeuvre,edit,right})] <!-- ajax preload -->
+		]
+		[(#ID_OEUVRE|afficher_qui_edite{oeuvre}|oui)
+			[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#ID_OEUVRE}|icone_verticale{#ID_OEUVRE|afficher_qui_edite{oeuvre},warning-24,'',right edition_deja})] <!-- ajax preload -->
+		]
+	]
+
+	<h1>[(#RANG). ](#TITRE|sinon{<:info_sans_titre:>})[(#CHEMIN_IMAGE{oeuvre-24.png}|balise_img{oeuvre,cadre-icone})]</h1>
+
+],simple fiche_objet})]
+
+<div class="ajax">
+	#FORMULAIRE_DATER{oeuvre,#ID_OEUVRE}
+</div>
+
+<!--affiche_milieu-->
+[<p class="reponse_formulaire><b><oeuvre:coherence_fichiers:></b><p>(#ENV{message_info})]
+
+<div id="wysiwyg">
+<INCLURE{fond=prive/objets/contenu/oeuvre,id=#ID_OEUVRE,id_oeuvre=#ID_OEUVRE,virtuel=oui,ajax=wysiwyg,wysiwyg=1}>
+</div>
+
+<div class="nettoyeur"></div>
+
+[(#AUTORISER{modifier,oeuvre,#ID_OEUVRE})
+	[(#ID_OEUVRE|afficher_qui_edite{oeuvre}|non)
+		[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#ID_OEUVRE}|icone_verticale{<:oeuvre:icone_modifier_oeuvre:>,oeuvre,edit,right ajax preload})]
+	]
+	[(#ID_OEUVRE|afficher_qui_edite{oeuvre}|oui)
+		[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#ID_OEUVRE}|icone_verticale{#ID_OEUVRE|afficher_qui_edite{oeuvre},warning-24,'',right edition_deja ajax preload})]
+	]
+]
+
+#PIPELINE{afficher_complement_objet,#ARRAY{args,#ARRAY{type,oeuvre,id,#ID_OEUVRE},data,'<div class="nettoyeur"></div>'}}
+
+#BOITE_FERMER
+[(#EVAL{_AJAX}|oui)
+	<script type="text/javascript">/*<!\\[CDATA\\[*/reloadExecPage('#ENV{exec}','#navigation,#chemin,#extra');/*\\]\\]>*/</script>
+]
+</BOUCLE_oeuvre>
+[(#ENV**{exec}|=={oeuvre_edit}|?{#INCLURE{fond=prive/squelettes/contenu/oeuvre_edit,redirect='',env,retourajax=oui},#REM|sinon_interdire_acces})]
+<//B_oeuvre>

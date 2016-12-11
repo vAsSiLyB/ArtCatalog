@@ -1,0 +1,39 @@
+[(#SET{defaut_tri,#ARRAY{
+	titre,1, 
+	id_catalogue,1,
+	points,-1
+}})]<B_liste_catalogues>
+#ANCRE_PAGINATION
+
+<h1 class="grostitre"><:catalogue:titre_les_catalogues:></h1>
+
+<h5 class="grostitre"><:catalogue:explication_catalogue_oeuvre:></h5>
+
+<div class="liste-objets catalogues">
+<table class='spip liste'>
+	[<caption><strong class="caption">(#ENV*{titre,#GRAND_TOTAL|singulier_ou_pluriel{catalogue:info_1_catalogue,catalogue:info_nb_catalogues}})</strong></caption>]
+	<thead>
+		<tr class='first_row'>
+			<th class='picto' scope='col'></th>
+			<th class='titre' scope='col'>[(#TRI{titre,<:catalogue:label_titre:>,ajax})]</th>
+			<th class='id' scope='col'>[(#TRI{id_catalogue,<:oeuvre:label_modifier_oeuvre:>,ajax})]</th>
+		</tr>
+	</thead>
+	<tbody>
+	<BOUCLE_liste_catalogues(CATALOGUES){id_mot?}{id_auteur?}{where?}{recherche?}{tri #ENV{par,id_catalogue},#GET{defaut_tri}}{par titre}{pagination #ENV{nb,10}}>
+		<tr class='[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]'>
+			<td class='picto'>[(#CHEMIN_IMAGE{catalogue-16.png}|balise_img)]</td>
+			<td class='titre principale'>[(#LOGO_CATALOGUE|image_reduire{20,26})]<a href="[(#ID_CATALOGUE|generer_url_entite{catalogue})]" title="<:info_numero_abbreviation|attribut_html:> #ID_CATALOGUE">[(#RANG). ]#TITRE</a></td>
+			<td class='id'>[(#AUTORISER{modifier,catalogue,#ID_CATALOGUE}|?{
+				<a href="[(#URL_ECRIRE{catalogue_edit,id_catalogue=#ID_CATALOGUE})]"><:catalogue:titre_catalogue_court:> #ID_CATALOGUE</a>,
+				#ID_CATALOGUE
+			})]</td>
+		</tr>
+	</BOUCLE_liste_catalogues>
+	</tbody>
+</table>
+[<p class='pagination'>(#PAGINATION{prive})</p>]
+</div>
+</B_liste_catalogues>[
+<div class="liste-objets catalogues caption-wrap"><strong class="caption">(#ENV*{sinon,''})</strong></div>
+]<//B_liste_catalogues>

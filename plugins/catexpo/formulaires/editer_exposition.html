@@ -1,0 +1,29 @@
+<div class='formulaire_spip formulaire_editer formulaire_#FORM formulaire_#FORM-#ENV{id_exposition,nouveau}'>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+
+	<form method='post' action='#ENV{action}' enctype="multipart/form-data"><div>
+		#ACTION_FORMULAIRE{#ENV{action}}
+		<ul>
+		[(#SAISIE{input, titre, label=<:exposition:label_titre:>})]
+		<li>
+			<label for=""><:exposition:label_type_exposition:></label>
+			<select name="type_expo" class="court">
+				<BOUCLE_data1(DATA) {source table, #ENV{type_expo_options}}>
+					<option 
+						[(#ENV{type_expo}|=={#VALEUR}) selected="selected"]
+						[(#ENV{type_expo}|non) [(#VALEUR|=={en ligne}|oui) selected="selected"] ] 
+					>#VALEUR</option>
+				</BOUCLE_data1>
+			</select>
+		</li>
+		[(#SAISIE{date_annee, date_expo, label=<:exposition:label_date:>})]
+		[(#SAISIE{input, lieu, label=<:exposition:label_lieu:>})]
+		</ul>
+		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+		<!--extra-->
+		<p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
+	</div></form>
+
+</div>

@@ -1,0 +1,80 @@
+[(#CACHE{0})]
+<div class="oeuvre_background ">
+	<div class="conteneur_modalbox" >
+		<div id="light_show_container" class="col-view" style="width:1280px">
+		#SET{id_catalogue,#INFO_ID_CATALOGUE{oeuvre,#ID_OEUVRE}}
+
+		<BOUCLE_nbre(DATA) {source tableau, #ENV{compare}}>
+			<div id="oeuvre_#VALEUR" data-highlight="highlight_oeuvre" style="float:left;width:640px">
+				[(#MODELE{oeuvre_canvas}{id_oeuvre=#VALEUR, appel_prive=#ENV{appel_prive}, mode=#ENV{mode}})]
+			</div>
+		</BOUCLE_nbre>
+			<div class="clearfix"></div>
+		</B_nbre>
+			<div id="oeuvre_#ID_OEUVRE" data-highlight="highlight_oeuvre">
+				[(#MODELE{oeuvre_canvas}{id_oeuvre=#ID_OEUVRE, appel_prive=#ENV{appel_prive}, mode=#ENV{mode}})]
+			</div>
+		<//B_nbre>
+		
+		<div id="show_mixer_button" data-highlight="standard_mode" style="color : #AAA; position: relative; right: 0px; cursor:pointer;" title="Show Mixer">
+		</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	// Init Art Analyser and lightShow
+	$(document).ready( function(){
+		var light_show_object=$('#light_show_container').art_analyser({
+			oeuvres_selector:'[data-highlight^=highlight_oeuvre]',
+			oeuvres_children_selector:'.img_superpose.oeuvre_layers',
+			action_color_changer:true,
+			action_eZoom:true
+		}).lightShow();
+		
+		// prepare to catch zoomLens on fluo_change
+		var zoomLens;
+		light_show_object.on('zoomReady',function() {
+			zoomLens=$('.zoomLens');
+		});
+		// throw zoomLens off the screen on fluo_change
+		light_show_object.on('lightshowdaylight', function() { // _trigger( type [, event ] [, data ] ) The event name is the /!\ lowercase /!\ concatenation of the widget name and type.
+			if (!zoomLens) {
+				var interval=setInterval(function() {
+					if (zoomLens) {
+						throw_lens_off_screen();
+						clearInterval(interval);
+					}
+				},254);
+			}
+			else {
+				throw_lens_off_screen();
+			}
+		});
+		function throw_lens_off_screen() {
+			var zoom_test=$(zoomLens[2]);
+			if (zoom_test.length && zoom_test.offset().left!=-5000) {
+				zoomLens.offset({top:0,left:-5000});
+			}
+		}
+// 		light_show_object.on('lightshowupdate', function() {});
+	});
+	</script>
+	
+	#MODELE{playlist,id_playlist=10}
+	
+	<script type="text/javascript" src="../plugins/sb_spip_utils/jQuery_utils/math.js"></script>
+	<script>
+	// Corriger les style de manière brutale : à refaire correctement en CSS
+	function hauteur_accrochage() {
+		var oeuvres=$('.oeuvre_container');
+		oeuvres.each(function() {
+			var elem_height=$(this).prop('scrollHeight') || $(this).height();
+			var margin_top=((elem_height)/2);
+			$(this).css('top',5+'px');
+		});
+	}
+	$(document).ready(function() {
+// 		hauteur_accrochage();
+	});
+	</script>
+</div>

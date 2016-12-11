@@ -1,0 +1,93 @@
+#SET{z-index,51}
+#SET{max_width,707}
+#SET{max_height,577}
+#SET{effect_array,#ARRAY}
+
+[(#ENV{mode}|=={fullscreen}|oui) #SET{max_width,1920} #SET{max_height,1080}]
+[(#ENV{mode}|=={inventaire}|oui) #SET{max_width,1280} #SET{max_height,720}]
+[(#ENV{mode}|=={compare}|oui) #SET{max_width,607} #SET{max_height,720}]
+
+#SET{img_check,#ARRAY}
+<div class="oeuvre_container">
+		<BOUCLE_documents_oeuvres(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version}>
+			#SET{z-index,#GET{z-index}|moins{1}}
+			[(#ENV{mode}|=={inventaire}|ou{[(#ENV{mode}|=={compare})]}|oui)
+				[(#VERSION|match{REF}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,REF}}}]
+				[(#VERSION|match{fluo1}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,fluo}}}]
+				[(#VERSION|match{rouge}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,rouge}}}]
+				[(#VERSION|match{or}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,or}}}]
+				[(#VERSION|match{vert}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,vert}}}]
+			]
+			
+			[(#SET{rapport,[(#HAUTEUR|div{#LARGEUR})]})]
+			[(#SET{height,#GET{max_height}})] [(#SET{width,[(#GET{max_height}|div{#GET{rapport}}|round{})]})]
+
+			[(#GET{width}|>={#GET{max_width}}|?{[(#SET{width,#GET{max_width}})] [(#SET{height,[(#GET{width}|mult{#GET{rapport}}|round{})]})] })]
+
+			<div class="img_superpose oeuvre_layers" data-highlight="version_[(#VERSION|supprimer_numero)]" data-zoom-image="[(#ENV{appel_prive}|?{[../(#FICHIER)],[(#FICHIER)]})]" style="[(#COMPTEUR_BOUCLE|!={1}|oui) display:none; margin-top:-[(#GET{height})]px; opacity:.12;] z-index:#GET{z-index}">
+				[(#ENV{appel_prive}|?{[(#SET{chemin_fichier,[../(#FICHIER|image_reduire{#GET{width},#GET{height}}|extraire_attribut{src})]})],[(#SET{chemin_fichier,[(#FICHIER|image_reduire{#GET{width},#GET{height}}|extraire_attribut{src})]})] })]
+				[(#ENV{mode}|=={inventaire}|oui)
+					<div class="eZoom_container" style="width:#GET{width}px; margin-left:[(#GET{max_width}|moins{#GET{width}}|div{2})]px;">
+				]
+					<img src="#GET{chemin_fichier}" width="#GET{width}" height="#GET{height}"/>
+				[(#ENV{mode}|=={inventaire}|oui)
+					</div>
+				]
+				[(#SET{effect_array,[(#GET{effect_array}|push{ [(#ID_VIGNETTE)] })]})]
+				<!--	Attention : ne pas laisser d'espace entre helper et imag-->
+			</div>
+			
+		</BOUCLE_documents_oeuvres>
+			<div class="img_superpose">
+				<img src="../plugins-dist/medias/prive/vignettes/png.png"/>
+				#NUMERO_INVENTAIRE
+			</div>
+		<//B_documents_oeuvres>
+		
+		[(#SET{toile_height,[(#GET{height}|plus{[(#GET{height}|div{40})]}|round{})]})] [(#SET{toile_width,[(#GET{width}|plus{[(#GET{width}|div{64})]}|round{})]})]
+		<div class="toile_support_helper oeuvre_layers" style="margin-left:[(#GET{toile_width}|>{#GET{toile_height}}|?{-[(#GET{toile_width}|div{151})]px;,0})]">
+			<div class="toile_support" data-highlight="REF" style=" [(#ENV{mode}|=={fullscreen}|oui) display:none;]
+																	z-index:22; 
+																	width:#GET{toile_width}px; 
+																	height:#GET{toile_height}px; 
+																	margin-top:-[(#GET{toile_height}|moins{[(#GET{toile_height}|div{59})]}|round{})]px;
+																	background-size: [(#GET{toile_width}|plus{2})]px [(#GET{toile_height}|plus{2})]px"></div>
+			<div class="toile_support fluo" style="z-index:21; [(#ENV{mode}|=={fullscreen}|oui) ]display:none;
+																	width:#GET{toile_width}px; 
+																	height:#GET{toile_height}px; 
+																	margin-top:-[(#GET{toile_height}|moins{[(#GET{toile_height}|div{64})]}|round{})]px;
+																	background-size: [(#GET{toile_width}|plus{1})]px [(#GET{toile_height}|plus{1})]px"></div>
+		</div>
+		
+		[(#ENV{mode}|!={inventaire})
+			[(#SET{effect_height,[(#GET{height}|plus{180})]})] [(#SET{effect_width,[(#GET{width}|plus{357})]})]
+			<div class="img_superpose fluo_transition halo effect_pass_0 [(#GET{width}|>{[(#GET{height}|plus{0})]}|non) offset_inverse]" style="display:none; opacity:0; z-index:77; height:[(#GET{effect_height}|moins{59})]px; margin-top:[(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-[(#GET{effect_height}|moins{59})]px;,-[(#GET{effect_height}|moins{59})]px;})] margin-left:[(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-84px;,-44px})]">
+				<img src="#CHEMIN{images/cellules_roses.png}" 
+					width="[(#GET{effect_width}|moins{157})]" height="[(#GET{effect_height}|moins{144})]px;"
+					style="margin-top:0px;"/>
+			</div>
+			<div class="img_superpose fluo_transition halo effect_pass_1 [(#GET{width}|>{[(#GET{height}|plus{0})]}|non) offset_inverse]" style="display:none; opacity:0; z-index:77; height:[(#GET{effect_height}|moins{0})]px; margin-top:[(#GET{width}|>{[(#GET{height}|plus{84})]}|?{-[(#GET{effect_height}|moins{0})]px;,-[(#GET{effect_height}|moins{0})]px;})] margin-left:[(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-177px;,-101px;})]">
+				<img src="#CHEMIN{images/illum.png}" 
+					width="[(#GET{effect_width}|moins{0})]" height="[(#GET{effect_height}|plus{77})]px;"
+					style="margin-top:0px;"/>
+			</div>
+		]
+		<BOUCLE_effect(DATA) {si [(#ENV{mode}|!={inventaire})]} {source array, #GET{effect_array}} {key IN 2,3,4,5}>
+			<BOUCLE_docs(DOCUMENTS) {id_document=#VALEUR} {tous}>
+			<div class="img_superpose fluo_transition effect_pass_[(#_effect:COMPTEUR_BOUCLE|plus{1})] [(#GET{width}|>{[(#GET{height}|plus{0})]}|non) offset]" style="display:none; opacity:0; z-index:77; height:[(#GET{effect_height}|plus{123})]px; margin-top:[(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-[(#GET{effect_height}|plus{123})]px;,-[(#GET{effect_height}|plus{123})]px;})] margin-left:[(#GET{width}|>{[(#GET{height}|plus{0})]}|?{-170px;,-127px})]">
+				<img src="[(#FICHIER|image_flou{10}|image_masque{plugins/highlight/images/effect_mask_micro_#_effect:COMPTEUR_BOUCLE.png}|extraire_attribut{src})]" 
+					width="#GET{effect_width}" height="[(#GET{effect_height}|moins{21})]px;"
+					style="margin-top:0px;"/>
+			</div>
+<!-- 			  -->
+			</BOUCLE_docs>
+		</BOUCLE_effect>
+		
+		<B_img_check>
+			<div class="img_check_dia" style="z-index:64;">
+		<BOUCLE_img_check(DATA) {source tableau, #GET{img_check}}>
+				<div data-highlight="selector_version_[(#VALEUR|table_valeur{0}|supprimer_numero)]" data-id="imgcheck_id_#ID_OEUVRE" class="img_check_dia_color [(#VALEUR|table_valeur{1})] img_check_dia_color_modal"></div>
+		</BOUCLE_img_check>
+			</div>
+		</B_img_check>
+</div>

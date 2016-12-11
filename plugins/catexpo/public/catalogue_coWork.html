@@ -1,0 +1,41 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<INCLURE{fond=header} {context=#SQUELETTE} {lang=#LANG}>
+</head>
+
+<body class="catalogue_accueil">
+	<div id="page" class="ajax">
+		[(#SESSION{statut}|<={1comite}|et{[(#SESSION{id_auteur}|oui)]}|?{
+			[(#INCLURE{fond=public/catalogue_#ENV{skel},id_catalogue=#ENV{id_catalogue},tri=#ENV{par}})],
+			#SET{afficher_login,oui}
+		})]
+		[(#GET{afficher_login}|=={oui}|oui)[(#LOGIN_PUBLIC{#SELF&var_mode=calcul})]]
+	</div>
+</body>
+
+<script type="text/javascript">
+
+$(document).ready( function(){
+
+	window.ajax_prepare=function () {
+		console.log('ajax_prepare');
+		$('a.ajax_catalogue').click(function(e) {
+			$('#ready').hide();
+			e.originalEvent.preventDefault();
+			$('#page').empty();
+			$('#loading_spinner').show().animate({'opacity':1},444);
+			var url=this.dataset.href;
+			$('#page').load(url, function() {
+				$('#loading_spinner').delay(1024).animate({'opacity':0},{duration:444, queue:false}).hide();
+				ajax_prepare();
+				var nav=self.element.siblings('#catalogue_menu');
+				  nav=nav.add(self.element.siblings('#to_page_top'))
+				  nav.show().animate({'opacity':1},1024, 'easeInOutCubic');
+				  $('#ready').show();	// pas forcément utile, mais au cas où on en aurait besoin
+			});
+		});
+	}
+// 	ajax_prepare();
+});
+</script>

@@ -1,0 +1,35 @@
+
+[(#SET{redirect,[(#URL_ECRIRE{catalogue,id_catalogue=#ID_CATALOGUE})]})]
+[(#AUTORISER{voir,oeuvre,#ID_OEUVRE}|sinon_interdire_acces)]
+<BOUCLE_catalogue(CATALOGUES){id_catalogue}{si #ENV{exec}|=={catalogue}}>
+[(#BOITE_OUVRIR{[
+	[(#AUTORISER{modifier,catalogue,#ID_CATALOGUE})
+		[(#ID_CATALOGUE|afficher_qui_edite{catalogue}|non)
+			[(#URL_ECRIRE{catalogue_edit,id_catalogue=#ID_CATALOGUE}|icone_verticale{<:catalogue:icone_modifier_catalogue:>,catalogue,edit,right ajax preload})]
+		]
+		[(#ID_CATALOGUE|afficher_qui_edite{catalogue}|oui)
+			[(#URL_ECRIRE{catalogue_edit,id_catalogue=#ID_CATALOGUE}|icone_verticale{#ID_CATALOGUE|afficher_qui_edite{catalogue},warning-24,'',right edition_deja ajax preload})]
+		]
+	]
+	
+	[(#AUTORISER{creer,oeuvre})
+		[(#URL_ECRIRE{ordonner_inventaire, id_catalogue=#ID_CATALOGUE}|icone_verticale{<:catalogue:icone_ordonner_inventaire:>,catalogue-synth,'',right})]
+		[(#URL_ECRIRE{oeuvre_edit,new=oui}|parametre_url{id_catalogue,#ID_CATALOGUE}|icone_verticale{<:oeuvre:icone_creer_oeuvre:>,oeuvre,new,right})]
+	]
+	
+	
+	<h1>[(#RANG). ](#TITRE|sinon{<:info_sans_titre:>})[(#CHEMIN_IMAGE{catalogue-24.png}|balise_img{catalogue,cadre-icone})]</h1>
+
+],simple fiche_objet})]
+
+<!--affiche_milieu-->
+
+<div id="wysiwyg">
+<INCLURE{fond=prive/objets/contenu/catalogue,id=#ID_CATALOGUE,id_catalogue=#ID_CATALOGUE,virtuel=oui,ajax=wysiwyg,wysiwyg=1}>
+</div>
+
+<div class="nettoyeur"></div>
+
+</BOUCLE_catalogue>
+[(#ENV**{exec}|=={catalogue_edit}|?{#INCLURE{fond=prive/squelettes/contenu/catalogue_edit,redirect='',env,retourajax=oui},#REM|sinon_interdire_acces})]
+<//B_catalogue>

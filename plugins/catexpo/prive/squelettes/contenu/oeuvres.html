@@ -1,0 +1,8 @@
+#FORMULAIRE_RECHERCHE_ECRIRE{#SELF,ajax}
+<div class="nettoyeur"></div>
+
+<INCLURE{fond=prive/objets/liste/oeuvres, par=titre, env, ajax, sinon=<:oeuvre:info_aucun_oeuvre:>}>
+
+[(#AUTORISER{creer,oeuvre})
+	[(#URL_ECRIRE{oeuvre_edit,new=oui}|icone_verticale{<:oeuvre:icone_creer_oeuvre:>,oeuvre,new,right})]
+]

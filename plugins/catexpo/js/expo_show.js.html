@@ -1,0 +1,13 @@
+#HTTP_HEADER{Content-Type:text/javascript;charset=utf8}
+#HTTP_HEADER{Vary: Accept-Encoding}
+var expo_manifest=[];
+<BOUCLE_expo(EXPOSITIONS){type_expo=show en ligne}>
+	expo_manifest.push({"id":'JSON_expo_'+[(#COMPTEUR_BOUCLE|moins{1})],"src":"#PRODUIRE{fond=modeles/expo_JSON.json,id_expo=#ID_EXPOSITION}", "type":"json"});
+	expo_manifest.push({"id":'JSON_expo_fullScreen'+[(#COMPTEUR_BOUCLE|moins{1})],"src":"#PRODUIRE{fond=modeles/expo_JSON.json,id_expo=#ID_EXPOSITION,mode=fullscreen}", "type":"json"});
+</BOUCLE_expo>
+
+</B_expo>
+var catalog=[
+             {id:'images_oeuvres', src:	''}
+];
+preload.loadManifest(expo_manifest);

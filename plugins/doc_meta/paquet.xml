@@ -1,0 +1,35 @@
+<paquet
+	prefix="docmeta"
+	categorie="outil"
+	version="0.1.1"
+	etat="dev"
+	compatibilite="[3.0.15;3.0.*]"
+	logo="prive/themes/spip/images/docmeta-64.png"
+	documentation=""
+	schema="0.0.7" 
+>
+
+	<nom>Métadonnées pour les Documents</nom>
+
+	<!-- cette balise peut etre presente plusieurs fois s'il y a plusieurs auteurs --> 
+	<auteur>Sylvain Breil</auteur>
+
+	<licence>GNU/GPL</licence>
+	
+	<necessite nom="cextras" compatibilite="[3.2.7;]" />
+	<necessite nom="saisies" compatibilite="[1.40.4;]" />
+	
+	<pipeline nom="declarer_champs_extras" inclure="docmeta_pipelines.php" />
+	<pipeline nom="renseigner_document_catalogue" inclure="docmeta_pipelines.php" />
+	<pipeline nom="header_prive" inclure="docmeta_pipelines.php" />
+	
+	<!--
+		Exemple de commandes
+		* parents de menus de SPIP :
+				menu_accueil (A eviter), menu_edition, menu_publication,
+				menu_activite, menu_squelette, menu_administration, menu_configuration 
+		<menu nom="docmeta" titre="docmeta:docmeta_titre" parent="menu_edition"  icone="images/docmeta-16.png" />
+		* parents d'onglets... configuration, plugins, statistiques, ... 
+		<onglet nom="docmeta" titre="docmeta:docmeta_titre" parent="configuration" icone="images/docmeta-24.png" />
+	-->
+</paquet>

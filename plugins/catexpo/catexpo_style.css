@@ -1,0 +1,636 @@
+/**/
+/*TYPO*/
+/**/
+
+.vert {
+	color:#0a0;
+}
+
+.rouge {
+	color:#a00;
+}
+
+.bleu {
+	color:#00a;
+}
+
+/* */
+/* TWEAKS */
+/* */
+
+#bando_haut {
+    z-index: 99;
+}
+
+.ordonner_inventaire.large #contenu, .exposition_vue.large #contenu {
+	width:1031px;
+	margin:0;
+}
+.ordonner_inventaire.large #navigation, .exposition_vue.large #navigation  {
+	width:970px;
+	min-height: 0;
+}
+.ordonner_inventaire.large #extra, .exposition_vue.large #extra {
+	width:970px;
+}
+
+body.catalogue.large #contenu {
+	width:720px;
+}
+
+body.catalogue #wysiwyg a {
+	text-decoration:none;
+}
+
+body.catalogue tr td {
+	background:none;
+	vertical-align:top;
+	height:49px;
+	padding:2px;
+}
+
+body.catalogue th, body.catalogue td.modifier, body.catalogue td.secondaire {
+	text-align:center;
+}
+
+body.catalogue tr.row_even {
+	background:#FBFBFB;
+}
+body.catalogue tr.row_odd {
+	background:#FFF;
+}
+
+body.catalogue .liste-objets tr td.principale {font-size:1.1em; font-weight:bold;}
+body.catalogue .liste-objets tr .id {text-align:center}
+body.catalogue .liste-objets tr td .spip_logos {
+    float: none;
+}
+
+body.catalogue_accueil {background:#F8F7F3;}
+.catalogue_accueil #page {width:1152px; margin:auto; text-align:left;}
+
+body.catalogue_accueil .anchor_container {
+	opacity : 0;	
+}
+
+body.catalogue_accueil #autres_cat_liste  {
+	float: right;
+}
+
+body.catalogue_accueil #autres_cat_liste .cat_liste {
+	display: none;
+	background:#F7F5F1;
+	margin-left : 24px;
+	border:1px solid #EDECE7;
+	border-width:0 0px 1px 0;
+}
+
+/**/
+/*COMPLEMENTS INTERFACE*/
+/**/
+
+.boite_edition_catalogue {
+	background: #FEFEFE;
+	padding: 0.6925em;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #85909A;
+}
+
+.formulaire_spip input.court, .formulaire_spip select.court {
+	width:113px;
+}
+.formulaire_editer_oeuvre .item_picker .frame {height:auto;}
+
+.formulaire_spip input.text.date_annee {
+	color:#555;
+	margin-left:12px;
+}
+
+.fiche_objet .titrem {
+	background-color: #C2C8CD;
+	color: #4A4A4A;
+	margin : 21px -5px;
+	padding:7px;
+}
+
+.fiche_objet h5 {
+	margin:12px 0 5px 0;
+}
+
+.catalogue .liste-objets tr > .modifier {
+	width:67px;
+}
+.catalogue .liste-objets tr > .date {
+	width:67px;
+}
+
+.onglets_simple .medias .oeuvre a, .onglets_simple .medias .oeuvre strong {
+padding-left:27px;background: url(prive/themes/spip/images/oeuvre-16.png) no-repeat 5px center;
+}
+
+.item_picker .navigateur {width:100%;}
+
+.oeuvre_edit .item_picker .liste a.ouvrir {display:inline;}
+
+.formulaire_spip li.oeuvre_vignette {
+	padding:21px;
+}
+
+/* */
+/* OEUVRES VERSIONNEES */
+/* */
+
+.conteneur_modalbox {
+/* 	width:100%; */
+/* 	height:707px; */
+	margin:0px;
+	
+}
+
+
+
+.oeuvres_critere {
+	padding:.1px;
+	margin-bottom:12px;
+}
+
+.oeuvre_carousel {
+	position:absolute;
+	text-align:center;
+	width:707px;
+	height:100%;
+}
+
+.oeuvre_container {
+/* 	position:relative; */
+/* 	top:344px; */
+}
+
+.oeuvre_background {
+	background:#111;
+}
+.oeuvre_daylight_background  {
+	background:#FFF;
+}
+
+
+#catalogue_liste_inc {
+/* 	margin-top:64px; */
+	padding: .1px;
+}
+
+#numeroter_oeuvre_inc .form_recherche {
+	float:right;
+	margin-top:7px;
+}
+
+.catalogue_accueil .bandeau_nav {
+	background:#F7F5F1;
+	position:fixed;
+	top:-0px;
+	left:0px;
+	width:99%;
+	max-height: 51px;
+	border:1px solid #EDECE7;
+	border-width:0 0px 1px 0;
+	z-index:360;
+}
+.bandeau_nav  h1, .bandeau_nav h3 {
+	float:left;
+	margin:12px 24px;;
+}
+.bandeau_nav h3 {
+	float:right;
+}
+
+.catalogue_accueil h1.grostitre {
+/* 	color:#FFF; */
+	margin:0px;
+	padding:7px 12px;
+}
+h2.titre_cat {
+	margin:64px 0 24px 12px;
+}
+
+#catalogue_menu {
+/* 	display:none; */
+	position:fixed;
+	background:#F8F7F3;
+	top:0px;
+	left:0px;
+	padding: 64px .1px;
+	height:98%;
+	width:229px;
+/* 	opacity:0; */
+	z-index:360;
+/* 	overflow:scroll; */
+}
+@media (max-width: 1441px) {
+	.catalogue_accueil #page {
+		width:auto;
+	}
+	.catalogue_accueil .bandeau_nav {
+		position:fixed;
+		top:auto;
+		bottom:0px;
+		height:44px;
+	}
+	#catalogue_menu {
+		top:auto;
+		left:0px;
+		bottom:0px;
+		width:auto;
+		height:auto;
+		max-height:215px;
+		max-width:1400px;
+	/* 	margin-left:-729px; */
+	}
+}
+
+#catalogue_menu .anchor_container {
+	height:34px;
+	margin:-5px 0px 0px 0px;
+	overflow:hidden;
+/* 	opacity:0; */
+}
+#catalogue_menu .anchor_link {
+	display:inline-block;
+/* 	background:#eaf3ff; */
+	color:#222;
+	margin:0px 2px 0 2px;
+	padding:5px 2px 5px 2px;
+/* 	border:1px solid #F2F1ED; */
+/* 	border:1px solid #52aafc; */
+/* 	border-width:0 0px 1px 0; */
+}
+
+#catalogue_menu .anchor_link span, #catalogue_menu .plus, .bandeau_nav span {
+	display:inline-block;
+	background:#CCC;
+	font-family: "Glyphicons Halflings";
+	color:#FFF;
+	height:21px;
+	padding:7px 2px;
+	margin:-8px 2px 0 2px;
+	border-radius:4px;
+/* 	vertical-align:baseline; */
+	cursor:pointer;
+}
+.anchor_link_pagin, #catalogue_menu .plus{
+	display:inline-block;
+	font-size:.7em;
+	color:#AAA;
+	height:12px;
+}
+#catalogue_menu .plus{
+	background:#F2F1EF;
+}
+.anchor_link_pagin.marge {
+	margin-left:38px;
+} 
+
+.bandeau_nav span {
+	padding:7px;
+	height:17px;
+}
+
+#to_page_top {
+	position:fixed;
+	display:block;
+	top:64px;
+	right:24px;
+	background:url('images/to_page_top.png');
+	height:84px;
+	width:84px;
+	opacity:0;
+}
+
+.oeuvre_detail {
+	color:#777;
+	min-height:357px;
+	margin-top:12px;
+	padding:12px;
+	box-shadow: 2px 2px 10px 0px rgba(0,0,0,.12);
+}
+.oeuvre_detail .img_check_dia {
+	margin-top:-0px;
+	margin-left:-24px;
+}
+
+.toile_thumb {
+	float:left;
+	height:357px;
+	width:357px;
+	text-align:center;
+	margin-left:21px;
+/* 	border:solid #AAA; */
+/* 	border-width: 0 2px 2px 0; */
+/* 	border-radius:7px; */
+}
+.toile_thumb.img_superpose {
+	margin:0px 0px 0px 0px;
+}
+.toile_thumb .spip_logos {
+	float:none;
+}
+.toile_thumb #loading_spinner {
+	
+}
+.toile_thumb:not(.img_superpose) {
+	background:#FAF9F7;
+	border:1px solid #F2F1ED;
+}
+.low_fi_medium:hover {
+	opacity:0;
+}
+
+
+.oeuvre_detail .nomenclature_toile {
+	float:right;
+	margin:0px 0px 0px 0px;
+}
+
+.oeuvre_detail .oeuvre_vignette {
+	background-color:#FAF9F7;
+}
+
+.oeuvre_detail .caracteristiques_toile {
+	background:#FAF9F7;
+	padding:12px;
+	border:1px solid #F2F1ED;
+	border-radius:7px;
+}
+
+.oeuvre_detail .editorial_toile {
+	float:left;
+	margin:0px 0px 0px 24px;
+}
+.oeuvre_detail .descriptif_toile .important {
+	color:#000;
+	font-weight:bold;
+}
+.oeuvre_detail .descriptif_toile .titre {
+	color:#000;
+	font-size:1.2em;
+}
+.oeuvre_detail label {
+	display:inline-block;
+	font-weight:normal;
+	width:180px;
+	vertical-align:top;
+	padding-top:5px;
+}
+
+.oeuvre_detail .descriptif_toile .infos_toile.notice_champ{
+	display:inline-block;
+	background:#FAF9F7;
+	width:529px;
+	height:127px;
+	margin-left:2px;
+	border:1px solid;
+	border-color:#E9E7E2 #F2F1EF #F2F1EF #E9E7E2;
+}
+
+.infos_toile {
+	display:inline-block;
+	width:531px;
+	padding:5px;
+	min-height:21px;
+}
+
+.infos_toile.odd {
+background:	#FAF9F7;
+}
+.infos_toile.even {
+background:	#F2F1EF;
+}
+.infos_toile.nomenc {
+	min-width:64px;
+	max-width:164px;
+}
+
+.compare_link {
+	opacity:0;
+}
+
+.infos_techniques_toile {
+	display:inline-block;
+	padding:5px 0px 0px 0px;
+	min-height:21px;
+}
+
+.oeuvre_detail .infos_toile .signature_toile {
+	font-family: fluoman, "arial narrow italic";
+	font-size:24px;
+	line-height:38px;
+	font-weight:normal;
+	letter-spacing:1px;
+}
+
+.oeuvre_vignette {
+	background:#FFF;
+	height:89px;
+	width:101px;
+	float:left;
+	text-align:center;
+	margin-right:2px;
+	padding:21px;
+	border:solid #AAA;
+	border-width: 0 2px 2px 0;
+	border-radius:7px;
+}
+
+.oeuvre_vignette .spip_logos {
+	float:none;
+}
+
+input.oeuvre_vignette_compare {
+	background:#FFF;
+	position:relative;
+	top:-19px;
+	left:-59px;
+	width:16px;
+	height:16px;
+	opacity:.2;
+}
+
+.oeuvre_vignette_dispositif {
+	color:#AAA;
+	font-size:.9em;
+	margin:-16px 0 0 0;	
+}
+
+.oeuvre_vignette_edit {
+	width:16px;
+	height:16px;
+	margin:-42px 0px 0px 101px;
+}
+.oeuvre_vignette_edit a:link {
+	opacity:.1;
+}
+.oeuvre_vignette_edit a:hover {
+	opacity:1;
+}
+.catalogue_accueil .oeuvre_vignette_edit {
+	margin:-19px 0px 0px 101px;
+}
+
+/*Fix float-ing vignettes*/
+.clearfix:after {
+	display:block;
+	content:''; /* Attention : un pseudo-�l�ment doit �tre de type "block" et avoir un contenu (meme vide) pour fonctionner en clear*/
+	clear:both;
+}
+
+.img_superpose {
+	position: relative;
+	margin:auto;
+/*	width:90px;*/
+/*	height:90px;*/
+	text-align:center;
+	outline: 1px solid transparent; /* Transparent outline for anti-aliasing */
+}
+
+.img_superpose.vignette_dia {
+	width:90px;
+	height:90px;
+}
+
+.img_vide {
+	width:90px;
+	height:90px;
+}
+
+/*Fix image vertical alignement*/
+.vertical_helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.img_superpose img, .img_superpose p.img_vide  {
+	vertical-align: middle;
+}
+
+.bg_dia {
+	position:relative;
+	left:-1px;
+	top:-1px;
+}
+
+.low_fi {
+	position:relative;
+	left:-1px;
+	top:-1px;
+}
+.low_fi:hover {
+	opacity:0;
+}
+
+.update_low_fi {
+	margin:-15px 0px 0px 101px;
+	opacity:.1;
+}
+.update_low_fi:hover {
+	opacity:1;
+}
+
+.img_check_dia {
+	background:#AAA;
+	margin-top:-84px;
+	margin-left:-15px;
+	height:77px;
+	width:15px;
+}
+
+#light_show_container .img_check_dia {
+	background:#AAA;
+	position:relative;
+	top:-357px;
+	left:12px;
+	height:77px;
+	width:15px;
+}
+
+.img_check_dia_color_modal {cursor:pointer;}
+.img_check_dia_color {
+	width:15px;
+	height:15.5px;
+	opacity:.77;
+}
+.img_check_dia_color.REF {
+	background:#CCC;
+}
+.img_check_dia_color.fluo {
+	background:#ADF;
+}
+.img_check_dia_color.rouge {
+	background:#FAA;
+}
+.img_check_dia_color.or {
+	background:#FFA;
+}
+.img_check_dia_color.vert {
+	background:#AFA;
+}
+
+#liste_comparaison {
+	position:fixed;
+	top:212px;
+	left:50%;
+	width:177px;
+	margin-left:555px;
+}
+
+p.catexpo_formulaire {
+	margin-top:12px;
+	text-align:justify;
+}
+
+.toile_support_helper {
+	text-align:center;
+}
+
+.toile_support_helper {
+	position: relative;
+	width:100%;
+}
+
+.toile_support {
+	position: relative;
+	background:url('images/toile_day.png');
+	background-position: top left;
+	background-repeat:no-repeat;
+	background-size:718px 548px; /* 100% 100% causes flickering in firefox*/
+	margin:auto;
+	opacity:.7;
+}
+
+.toile_support.fluo {
+	background:url('images/toile_fluo.png');
+	background-position: -5px 5px;
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+}
+
+.fluo_transition {
+	position:relative;
+	top:221px;
+}
+
+.fluo_transition.halo {
+	top:64px;
+}
+
+.fluo_transition.offset {
+	top:215px;
+}
+
+.fluo_transition.offset_inverse {
+	top:64px;
+}
+
+.logout_link {
+	float:right;
+}
