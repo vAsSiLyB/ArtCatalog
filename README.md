@@ -34,4 +34,4 @@ Use a finite set of "captured on the fly" EXIF metadata to identify the thumbnai
 e.g. : You can differentiate easily the professional shootings from the photos you made for a simple inventory
 
 
-####[See the Demo page](http://catalog.fluoman.net)
+####[See a Demo](http://catalog.fluoman.net)
