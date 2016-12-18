@@ -1,0 +1,36 @@
+<div class="ordonner_inventaire" >
+	<div class="clearfix">
+		[(#URL_ECRIRE{catalogue,id_catalogue=#ENV{id_catalogue}}|icone_verticale{Retour,catalogue,'',left retour[(#ENV{retourajax,''}|oui)ajax preload]})]
+		<h1 class="grostitre" style="float:left;">#INFO_TITRE{catalogue,#ENV{id_catalogue}}</h1>
+		[(#AUTORISER{creer,oeuvre})
+			[(#SET{redirect,#URL_ECRIRE{ordonner_inventaire, id_catalogue=#ID_CATALOGUE}})]
+			[(#URL_ECRIRE{oeuvre_edit,new=oui}|parametre_url{id_catalogue,#ID_CATALOGUE}|parametre_url{redirect,#GET{redirect}}|icone_verticale{<:oeuvre:icone_creer_oeuvre:>,oeuvre,new,right})]
+		]
+	</div>
+		<B_recherche>
+			<div class="clearfix">#FORMULAIRE_RECHERCHE_ECRIRE{#SELF}</div>
+			<div class="clearfix">
+		<BOUCLE_recherche(OEUVRES) {id_catalogue=#ENV{id_catalogue}} {recherche} {par points}>
+			<div class="clearfix" style="width:144px; margin-bottom:21px; float:left;">
+				<div class="" style="height:38px;">[(#TITRE|sinon{#TITRE_SECRET})]</div>
+				[(#INCLURE{fond=prive/inc/oeuvre_diapo_inc, 
+					id_oeuvre=#ID_OEUVRE,
+					titre=#TITRE,
+					date_oeuvre=[((#DATE_REAL|!={0000-00-00 00:00:00}|?{#DATE_REAL,''}))],
+					numero_inventaire=#NUMERO_INVENTAIRE,
+					lowFi_mask=non,
+				})]
+			</div>
+		</BOUCLE_recherche>
+		</B_recherche>
+			[(#ENV{recherche})
+			<div class="clearfix">#FORMULAIRE_RECHERCHE_ECRIRE{#SELF}</div>
+			Aucun résultat
+			]
+		<//B_recherche>
+		</div>
+		</B_recherche>
+	<div id="form_numeroter" class="ajax">
+		#FORMULAIRE_NUMEROTER_OEUVRES{#ENV{id_catalogue}}
+	</div>
+</div>

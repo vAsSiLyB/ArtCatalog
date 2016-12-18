@@ -1,0 +1,12 @@
+<BOUCLE_exposition(EXPOSITIONS){id_exposition}>
+[(#BOITE_OUVRIR{[
+	[(#URL_ECRIRE{exposition_edit,id_exposition=#ID_EXPOSITION}|icone_verticale{<:exposition:icone_modifier_exposition:>,exposition,edit,right})]
+	[(#URL_ECRIRE{exposition_vue, id_exposition=#ID_EXPOSITION}|icone_verticale{<:exposition:icone_exposition_vue:>,exposition,'',right})]
+	<h1>[(#RANG). ](#TITRE|sinon{<:info_sans_titre:>})[(#CHEMIN_IMAGE{exposition-24.png}|balise_img{exposition,cadre-icone})]</h1>
+
+],simple fiche_objet})]
+<!--affiche_milieu-->
+
+
+</BOUCLE_exposition>
+

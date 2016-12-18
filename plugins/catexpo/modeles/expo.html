@@ -1,0 +1,39 @@
+<div id="light_show_container" class="">
+[(#SET{left,'143'})]
+[(#ENV{mode}|=={fullscreen}|oui) #SET{left,0}]
+<BOUCLE_oeuvres(OEUVRES) {id_exposition=#ENV{id_expo}} {par id_oeuvre} >
+	<div  id="oeuvre_#ID_OEUVRE" class="oeuvre_carousel index#COMPTEUR_BOUCLE [(#COMPTEUR_BOUCLE|=={1}|oui) current]" data-highlight="highlight_oeuvre[(#COMPTEUR_BOUCLE|moins{1})]" style="left:#GET{left}px; [(#COMPTEUR_BOUCLE|!={1}|?{})];"> <!-- transform:rotateY(-59deg) translateZ(720px)-->
+		[(#MODELE{oeuvre_canvas}{id=#ID_OEUVRE, mode=#ENV{mode}})]
+	</div>
+	
+	[(#ENV{mode}|=={fullscreen}|?{ [(#SET{left,[(#GET{left}|plus{4096})]})], [(#SET{left,[(#GET{left}|plus{1440})]})] })]
+</BOUCLE_oeuvres>
+	
+	#MODELE{playlist,id_playlist=10}
+	
+	[(#REM)
+	<script type="text/javascript">
+	 \[(#
+		INCLURE{fond=js/highlight_init.js,id_catalogue=#GET{id_catalogue},var_mode=recalcul}|compacte{js})\] 
+	</script>
+	]
+<script type="text/javascript">
+	function hauteur_accrochage() {
+		var oeuvres=$('.oeuvre_container');
+		var offset=0;
+		if (window.innerHeight<720) {
+			offset=44;
+		}
+		oeuvres.each(function() {
+			var elem_height=$(this).prop('scrollHeight') || $(this).height();
+			var margin_top=((elem_height)/2);
+			$(this).css('marginTop',-(margin_top+offset)+'px');
+		});
+	}
+	
+	$(document).ready(function() {
+		hauteur_accrochage();
+	});
+// 	transform: rotateY(45deg);
+</script>
+</div>

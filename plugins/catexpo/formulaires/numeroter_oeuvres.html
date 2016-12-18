@@ -1,0 +1,172 @@
+[(#REM)
+<!--	Beaucoup de choses sont déjà potentiellement traitées par php dans la fonction charger de CVT : -->
+<!--		on y utilise trouver_numeros_ordre() plutôt que de lancer de nouvelles requêtes ici-->
+]
+<span id="top"></span>
+<div id="numeroter_oeuvre_inc">
+
+#SET{activer,true}
+
+#SET{oeuvres_par_criteres,#ENV{data_numeros_ordre}|table_valeur{0}}
+#SET{data_oeuvres,#ENV{data_numeros_ordre}|table_valeur{1}}
+#SET{params_oeuvres,#ENV{data_numeros_ordre}|table_valeur{2}}
+#SET{anchors,#ARRAY}
+
+[(#GET{params_oeuvres}|table_valeur{auto}|=={1}|non)
+	Vous devez avoir activé et paramétré l'inventaire automatique pour bénéficier de cette partie de la gestion
+	#SET{activer,false}
+]
+
+[(#VAL{}|test_espace_prive|non)#SET{activer,false}]
+		
+		[(#GET{activer}|=={true}|et{#ENV{recherche}|non}|oui)
+		<form action="#ENV{action}" method="POST" enctype="multipart/form-data">
+			#ACTION_FORMULAIRE{#ENV{action}}
+			<div class="formulaire_spip">
+			
+			<div id="nouvelle_num_input"></div>
+			<h1>Renuméroter</h1>
+			<p class="">Faites glisser les diapos pour modifier l'ordre des oeuvres dans l'inventaire.</li>
+			<div class="boutons" >
+				<button  class="btn btn-default" id="valider_numerotation" style="display:none;">Valider</button>
+			</div>
+			</div>
+		</form>
+		]
+		
+		<div id="liste_comparaison" class="formulaire_spip">
+			<h1 class="">Comparaison</h1>
+			<p class="catexpo_formulaire">
+				<:catexpo:instruction_formulaire_comparer:>
+			</p>
+			<div class="boutons">
+				<a id="formulaire_comparer_action" class="mediabox" href="[(#URL_PAGE{prive/oeuvre_vue,id_oeuvre=#CLE}|parametre_url{mode,compare}|parametre_url{appel_prive,true}|parametre_url{unique,[(#EVAL{time()})]})]">
+					<button type="button"><:catexpo:bouton_comparer:></button>
+				</a>
+			</div>
+		</div>
+		
+		<div class="bandeau_nav clearfix">
+			[(#ENV{recherche}|non)<div class="form_recherche">#FORMULAIRE_RECHERCHE_ECRIRE{#SELF}</div>]
+			<h3 class="" style="opacity:.12;"><a class="" href="#"><span class="glyphicon">&#xe153;</span> Par date</a></h3>
+			<h3 id="orphelin_tri" class="" style="opacity:.12;"><a class="" href="#"><span class="glyphicon">&#xe153;</span> Orphelins</a></h3>
+			<h3 id="lowFi_noMask" class="" style="opacity:.12;"><a class="" href="[(#SELF|parametre_url{lowFi_mask,[(#ENV{lowFi_mask}|=={non}|?{oui,non})]})]"><span class="glyphicon">&nbsp;</span>Montrer LowFi</a></h3>
+		</div>
+		<a id="to_page_top" href="#top" title="Scroll to Top"></a>
+		
+		<div id="liste_diapos">
+		
+
+		
+		<BOUCLE_criteres(DATA) {si #GET{activer}|=={true}|et{#RECHERCHE|non}} {source tableau, #GET{oeuvres_par_criteres}}>
+			[(#SET{anchor,[(#GET{params_oeuvres}|table_valeur{#CLE}|table_valeur{constantes}|implode{', '})]})]
+			#SET{anchors, #GET{anchors}|push{#GET{anchor}}}
+			<B_oeuvres>
+				<h2 id="#GET{anchor}" class="">#GET{anchor}</h2>
+				<ul class="oeuvres_critere clearfix">
+			<BOUCLE_oeuvres(DATA) {source tableau, #VALEUR}>
+				[(#INFO_ID_OEUVRES_LIEES{oeuvre,#CLE}|?{#SET{orphelin,0},#SET{orphelin,1}})]
+				[(#SET{date_oeuvre,[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{date_real}|annee)]})]
+				[(#INCLURE{fond=prive/inc/oeuvre_diapo_inc, 
+					id_catalogue=#ENV{id_catalogue},
+					id_oeuvre=#CLE,
+					titre=[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{titre})],
+					date_oeuvre=[((#GET{date_oeuvre}|!={0000}|?{#GET{date_oeuvre}}))],
+					numero_inventaire=[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{numero_inventaire})],
+					lowFi_mask=#ENV{lowFi_mask},
+				})]
+			</BOUCLE_oeuvres>
+				</ul>
+			</B_oeuvres>
+		</BOUCLE_criteres>
+		</div>
+</div>
+
+<div id="catalogue_menu" class="formulaire_spip">
+	<h1 class="grostitre" style="margin-left:7px; margin-top: 0px;">Navigation</h1>
+<BOUCLE_menus(DATA) {source tableau, #GET{anchors}}>
+	[(#COMPTEUR_BOUCLE|=={1}|?{<div>})]
+	[(#VALEUR|substr{-1,1}|!={0}|?{</div><div class="anchor_container">})]
+	[(#VALEUR|substr{-3,3}|=={020}|oui)<span class="glyphicon plus" style="float:right;">+</span><br/>][(#VALEUR|substr{-3,3}|=={120}|oui)<br/>]
+	<a class="[(#VALEUR|substr{-1,1}|=={0}|?{anchor_link_pagin, anchor_link})] [(#VALEUR|substr{-3,3}|=={020}|ou{[(#VALEUR|substr{-3,3}|=={120})]}ou{[(#VALEUR|substr{-3,3}|=={220})]}|oui) marge]" href="##VALEUR">
+	<span class="glyphicon">&#xe041;</span>[(#VALEUR|substr{-1,1}|=={0}|?{[(#VALEUR|substr{-3,3}|ltrim{0})],&nbsp;#VALEUR})]
+	</a>
+	[(#COMPTEUR_BOUCLE|=={#TOTAL_BOUCLE}|?{</div>})]
+</BOUCLE_menus>
+    <div class="boutons"></div>
+</div>
+
+<script type="text/javascript">
+$(document).ready( function(){
+	
+	$('#numeroter_oeuvre_inc').art_analyser({
+		action_numeroter:true,
+		action_diapo_compare:true,
+		action_color_changer:true
+	});
+
+	<!-- Mediabox  with onClosed callback -->
+	
+	var options = {
+			transition:box_settings.trans,
+			speed:box_settings.speed,
+			maxWidth:box_settings.maxW,
+			maxHeight:box_settings.maxH,
+			minWidth:box_settings.minW,
+			minHeight:box_settings.minH,
+			opacity:box_settings.opa,
+			slideshowSpeed:box_settings.ssSpeed,
+			slideshowStart:box_settings.str_ssStart,
+			slideshowStop:box_settings.str_ssStop,
+			current:box_settings.str_cur,
+			previous:box_settings.str_prev,
+			next:box_settings.str_next,
+			close:box_settings.str_close,
+			splash_url:box_settings.splash_url
+	};
+	$('.mediabox').colorbox(jQuery.extend({}, options, {slideshow:true,slideshowAuto:false,onClosed:function() {$(".zoomContainer").remove();}}));
+	
+	// Orphelins tri sauvage
+	var removed, tri_original;
+	$('#orphelin_tri').click(function(e) {
+		e.originalEvent.preventDefault();
+		if (removed instanceof jQuery) {
+			$('#liste_diapos').empty().append(tri_original);
+			removed='';
+		}
+		else {
+			tri_original=$('#liste_diapos').html();
+			removed=$('.orphelin').detach();
+			$('#liste_diapos').empty().append(removed);
+		}
+	});
+	
+	$('#to_page_top').click(function(e) {
+		e.originalEvent.preventDefault();
+		if (window.location.href.indexOf('#')!==-1) {
+			window.location.hash='';
+			// slice off the remaining '#' in HTML5:    
+			if (typeof window.history.replaceState == 'function') {
+			  history.replaceState({}, '', window.location.href.slice(0, -1));
+			}
+		}
+		document.getElementById('page').scrollIntoView();
+	});
+	var scroll_button=$('#to_page_top');
+	scroll_button.status='hidden';
+	window.onscroll=function(e) {
+		if ($(window).scrollTop()>window.innerHeight && scroll_button.status=='hidden') {
+			scroll_button.status='visible';
+			scroll_button.animate({'opacity':1}, {duration:500, queue:false});
+		}
+		else if ($(window).scrollTop()<window.innerHeight && scroll_button.status=='visible') {
+			scroll_button.status='hidden';
+			scroll_button.animate({'opacity':0}, {duration:500, queue:false});
+		}
+	};
+});
+</script>
+
+<script type="text/javascript">/*<![CDATA[*/
+[(#INCLURE{javascript/medias_edit.js}|compacte{js})]
+/*]]>*/</script>

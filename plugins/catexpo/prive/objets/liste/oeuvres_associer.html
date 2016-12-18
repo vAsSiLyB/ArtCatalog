@@ -1,0 +1,83 @@
+[(#SET{defaut_tri,#ARRAY{
+	multi titre,1,
+	date,-1, 
+	id_oeuvre,1
+}})
+]
+#SET{exclus,#ENV**{exclus,#ENV{objet_source}|lister_objets_lies{#ENV{objet},#ENV{id_objet},#ENV{_objet_lien}}}}
+#SET{debut,#ENV{debutoeua,#EVAL{_request("debutoeua");}}}
+<B_liste_oeuvres>
+[(#REM) En cas de pagination indirecte @32, il faut refaire le set car la boucle
+a mis a jour la valeur avec la page reelle]
+#SET{debut,#ENV{debutoeua,#EVAL{_request("debutoeua");}}}
+
+#SET{afficher_lettres,#TRI|=={'multi titre'}|oui}
+#ANCRE_PAGINATION
+<div class="liste-objets liste-objets-associer oeuvres">
+<table class='spip liste'>
+[<caption><span class="caption"><strong>(#ENV*{titre,#GRAND_TOTAL|singulier_ou_pluriel{oeuvre:info_1_oeuvre,oeuvre:info_nb_oeuvres}})</strong>
+<span class="recherche">
+	<label for="recherche-#ENV{id}"><:info_rechercher_02:></label>
+	<input type="text" class="recherche" name="recherche" id="recherche-#ENV{id}" value="#ENV{recherche}" />
+	<input type="submit" class="tout_voir" name="tout_voir" value="<:info_tout_afficher:>" />
+</span>
+</span>
+</caption>]
+	<thead>
+		#SET{p,''}
+		#SET{test,''}
+		#SET{tri_actif, "multi titre, multi titre_secret"}
+		<BOUCLE_lettre(OEUVRES){tout}{!id_oeuvre IN #GET{exclus}}{where?}{recherche?}
+			{tri #ENV{par,multi titre},#GET{defaut_tri}}{id_oeuvre==#GET{afficher_lettres}|?{'.*','.*'}}> <!-- ici #GET{afficher_lettres}|?{'.*','A'} me paraissait étrange : pourquoi uniquement les titres commençant par A si on veut construire un selecteur justement ?-->
+			#SET{titre_synthese,#TITRE|?{#TITRE**, #TITRE**}}
+			[(#GET{titre_synthese}|extraire_multi|initiale|unique|oui)
+		[(#SET{p,#GET{p}|concat{
+		#SELF|parametre_url{debutoeua,@#ID_OEUVRE}|ancre_url{paginationoeua}|afficher_initiale{#GET{titre_synthese}|extraire_multi|initiale{},#COMPTEUR_BOUCLE,#GET{debut}, #ENV{nb,10}}
+		}})]
+		]</BOUCLE_lettre>[
+		(#SET{p,
+			#GET{p}|concat{
+				#REM|afficher_initiale{#REM,#TOTAL_BOUCLE,#GET{debut},#ENV{nb,10}}
+			}
+		})]</B_lettre>
+		[<tr><td colspan="3"><p class='pagination'>(#GET{p})</p></td></tr>]
+	
+		<tr class='first_row'>
+			<th class='titre' scope='col'>[(#TRI{numero_inventaire,<:oeuvre:label_numero_inventaire:>,ajax})]</th>
+			<th class='titre' scope='col'>[(#TRI{multi titre,<:oeuvre:label_titre:>,ajax})]</th>
+			<th class='action' scope='col'></th>
+		</tr>
+	</thead>
+	<tbody>
+
+	[(#SET{tri_actif, [(#ENV{i}|?{multi titre, id_oeuvre})]})]
+	<BOUCLE_liste_oeuvres(OEUVRES){!id_oeuvre IN #GET{exclus}}{where?}{recherche?}
+		{tri #ENV{par,#GET{tri actif}},#GET{defaut_tri}}{pagination #ENV{nb,10} oeua}>
+		#SET{logo_oeuvre,""}
+		<BOUCLE_vignette(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version} {0,1}>
+			[(#SET{logo_oeuvre,[(#LOGO_DOCUMENT|image_reduire{38,38})]})]
+		</BOUCLE_vignette>
+
+		<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})][ (#EXPOSE|unique)][ (#TITRE**|extraire_multi|initiale|=={#ENV{i}}|?{on}|unique)]">
+			<td class='titre'>#NUMERO_INVENTAIRE [(#GET{logo_oeuvre})]</td>
+			<td class='titre'><a href="[(#ID_OEUVRE|generer_url_entite{oeuvre})]">[(#TITRE|sinon{#TITRE_SECRET})]</a></td>
+			<td class='action'>
+				<button class="button link add" name="ajouter_lien\[oeuvre-#ID_OEUVRE-#OBJET-#ID_OBJET\]" value="+"><:oeuvre:ajouter_lien_oeuvre:> [(#CHEMIN_IMAGE{ajouter-12.png}|balise_img{'+'})]</button>
+			</td>
+		</tr>
+	</BOUCLE_liste_oeuvres>
+	</tbody>
+</table>
+[<p class='pagination'>(#PAGINATION{prive})</p>]
+</div>
+</B_liste_oeuvres>[(#ENV{recherche}|oui)
+<div class="liste-objets liste-objets-associer oeuvres caption-wrap">
+<span class="caption"><strong>[(#VAL{info_recherche_auteur_zero}|_T{#ARRAY{cherche_auteur,#ENV{recherche}}})]</strong>
+<span class="recherche">
+	<label for="recherche-#ENV{id}"><:info_rechercher_02:></label>
+	<input type="text" class="recherche" name="recherche" id="recherche-#ENV{id}" value="#ENV{recherche}" />
+	<input type="submit" class="tout_voir" name="tout_voir" value="<:info_tout_afficher:>" />
+</span>
+</span>
+</div>
+]<//B_liste_oeuvres>

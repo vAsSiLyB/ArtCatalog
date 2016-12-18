@@ -1,0 +1,64 @@
+				#SET{z-index,51}
+				<li id="oeuvre_#ID_OEUVRE" class="oeuvre_vignette [(#GET{orphelin}|oui) orphelin]" title="#ENV{titre}&nbsp;#ENV{date_oeuvre}">
+					<!-- ajax update low_fi_icon -->
+					<div class="ajax">
+					<input id="oeuvre_compare_#ID_OEUVRE" type="checkbox" class="oeuvre_vignette_compare" title="Sélectionner cette oeuvre pour la comparaison"/>
+						<div class="oeuvre_vignette_edit">
+							<a class="editbox" href="[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#ID_OEUVRE}|parametre_url{redirect,[(#URL_ECRIRE{ordonner_inventaire,id_catalogue=#ENV{id_catalogue}})]})]" title="<:oeuvre:label_modifier_oeuvre:>">
+								<img src="../plugins/catexpo/prive/themes/spip/images/oeuvre-edit-16.png"/>
+							</a>
+						</div>
+						#SET{img_check,#ARRAY}
+						<B_documents_oeuvres>
+							[<div class="oeuvre_vignette_dispositif">
+								(#GET{dispositif_annee})
+							</div>]
+							<a href="[(#URL_PAGE{prive/oeuvre_vue,id_oeuvre=#ID_OEUVRE}|parametre_url{mode,inventaire}|parametre_url{appel_prive,true}|parametre_url{unique,[(#EVAL{time()})]})]" class="mediabox" rel="toiles">
+							<div class="img_superpose vignette_dia bg_dia" style="z-index:12"><img width="92px" height="92px" src="../plugins/catexpo/images/bg_dia_icon.png"/></div>
+						<BOUCLE_documents_oeuvres(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version}>
+							#SET{z-index,#GET{z-index}|moins{1}}
+							<div data-highlight="version_[(#VERSION|supprimer_numero)]" class="img_superpose vignette_dia version_dia" style="[(#COMPTEUR_BOUCLE|>={1}|oui) margin-top:-90px;] z-index:#GET{z-index}">
+								<!--	Attention : ne pas laisser d'espace entre helper et img-->
+								<span class="vertical_helper"></span>#LOGO_DOCUMENT<br/>
+
+								[(#REM) <!--  Afficher le dispositif, sinon un point d'interrogation si on n'a pas réussi à transcrire le modele en dispositif
+									et dans les 2 cas, la date, si elle est différente de 0000  -->]
+								#SET{date_digit,#DATE_PRISE_DE_VUE|couper{4}}
+								[(#COMPTEUR_BOUCLE|=={1}|oui) 
+									[(#SET{dispositif_annee,[(#DISPOSITIF|sinon{[(#MODELE_CAM|oui)?]}) [(#GET{date_digit}|!={0000}|oui) [(#GET{date_digit})] ] ]})]
+									[(#SET{id_document,#ID_DOCUMENT})]
+									[(#SET{dispositif,#DISPOSITIF})] 
+								]
+								[(#DISPOSITIF|match{^(compact),1}|non)
+									[(#VERSION|match{REF}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,REF}}}]
+									[(#VERSION|match{fluo1}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,fluo}}}]
+									[(#VERSION|match{rouge}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,rouge}}}]
+									[(#VERSION|match{or}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,or}}}]
+									[(#VERSION|match{vert}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,vert}}}]
+								]
+							</div>
+						</BOUCLE_documents_oeuvres>
+							[(#GET{dispositif_annee}|substr{0,7}|=={compact}|et{#ENV{lowFi_mask}|!={non}}|oui) <div class="img_superpose vignette_dia low_fi" id="low_fi_icon_#ID_DOCUMENT" style="[(#GET{dispositif}|=={compact_}|oui) opacity:.2;] margin-top:-90px; z-index:52"><img width="92px" height="92px" src="../plugins/catexpo/images/low_fi_icon.png"/></div>]
+							</a>
+							<a href="#URL_ECRIRE{oeuvre_edit,id_oeuvre=#ID_OEUVRE}" style="font-size:.9em;">
+								#ENV{numero_inventaire}
+							</a>
+							#FORMULAIRE_UPDATE_LOW_FI_ICON*{#GET{id_document},#GET{dispositif_annee}}
+						</B_documents_oeuvres>
+							<a href="[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#ID_OEUVRE})]" style="font-size:.9em;">
+								<div class="img_superpose">
+									<img src="../plugins-dist/medias/prive/vignettes/png.png"/>
+									#ENV{numero_inventaire}
+								</div>
+							</a>
+						<//B_documents_oeuvres>
+						<B_img_check>
+							<div class="img_check_dia">
+						<BOUCLE_img_check(DATA) {source tableau, #GET{img_check}}>
+								<div data-highlight="selector_version_[(#VALEUR|table_valeur{0}|supprimer_numero)]" data-id="imgcheck_id_#_oeuvres:CLE" class="img_check_dia_color [(#VALEUR|table_valeur{1})]"></div>
+						</BOUCLE_img_check>
+							</div>
+						</B_img_check>
+					</div>
+				<!-- /ajax update low_fi_icon -->
+				</li>

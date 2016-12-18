@@ -1,0 +1,72 @@
+[(#REM)<!-- Pour le mode "auto", il est nécessaire de contrôler tout d'abord que *toutes* les oeuvres possèdent un numéro d'ordre (un parse ne suffit pas) -->]
+#SET{verifier_inventaire, #ENV{id_catalogue}|attribuer_numeros_ordre }
+[(#SET{params,[(#GET{verifier_inventaire}|table_valeur{1})]})]
+[(#SET{verifier_inventaire,[(#GET{verifier_inventaire}|table_valeur{0})]})]
+#SET{nbre_conforme,0}
+
+<div class="boite_edition_catalogue" >
+[(#ENV{redirect}|icone_verticale{Retour,catalogue,'',left retour[(#ENV{retourajax,''}|oui)ajax preload]})]
+
+<h1 class="grostitre"><:catalogue:titre_catalogue:> #ENV{id_catalogue} : <:catalogue:titre_verifier_inventaire:></h1>
+
+<B_oeuvres>
+Status : [(#GET{nbre_conforme}|=={#TOTAL_BOUCLE}|?{Tous les numéros sont conformes,Des corrections sont possibles})]
+	[(#GET{mise_a_jour}|oui) 
+		<p>Mode <i>inventaire auto</i> : <span class="rouge">mise à jour nécessaire.</span></p>
+	]
+	<div class="ajax">
+		#FORMULAIRE_UPDATE_INVENTAIRE_TOUT{#ENV{id_catalogue}, #GET{verifier_inventaire}}
+	</div>
+	
+
+	<table style="margin-top:21px;">
+	<BOUCLE_oeuvres(OEUVRES) {id_catalogue=#ENV{id_catalogue}}>
+		<tr class="[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]"><td>
+			<div class='formulaire_spip formulaire_editer formulaire_#FORM formulaire_#FORM-#ENV{id_oeuvre,nouveau}'>			
+				[(#SET{oeuvre,[(#GET{verifier_inventaire}|table_valeur{#ID_OEUVRE})]} )]
+				[(#SET{num_inventaire,[(#GET{oeuvre}|table_valeur{numero_inventaire})]})]
+				[(#SET{num_correction,[(#GET{oeuvre}|table_valeur{normalized})]})]
+	
+				[(#GET{oeuvre}|table_valeur{parsed}|oui)
+					<b>[(#GET{oeuvre}|table_valeur{titre})]</b> : <b>#GET{num_inventaire}</b> <span class="vert">Conforme</span> Nomenclature souple<br/>
+					[(#GET{oeuvre}|table_valeur{normalized}|oui)
+						<div class="ajax">
+						[(#FORMULAIRE_UPDATE_INVENTAIRE{#ID_OEUVRE, #GET{num_inventaire}, #GET{num_correction}} )]
+						</div>
+					]
+				]
+				[(#GET{oeuvre}|table_valeur{parsed}|non)
+					[(#GET{oeuvre}|table_valeur{conforme}|oui)
+						#SET{nbre_conforme,#GET{nbre_conforme}|plus{1}}
+						<b>[(#GET{oeuvre}|table_valeur{titre})]</b> : <b>#GET{num_inventaire}</b> <span class="bleu">Conforme</span> Nomenclature stricte<br/>
+					]
+					[(#GET{params}|table_valeur{auto}|oui)
+						[(#GET{num_inventaire}|!={[(#GET{oeuvre}|table_valeur{generation})]}|oui)
+							#SET{mise_a_jour,1}
+							<div class="ajax">
+							<span class="rouge">Inventaire auto pas à jour.</span></span>
+							[(#FORMULAIRE_UPDATE_INVENTAIRE{#ID_OEUVRE, #GET{num_inventaire}, [(#GET{oeuvre}|table_valeur{generation})]})]
+							</div>
+						]
+					]
+					[(#GET{oeuvre}|table_valeur{conforme}|non)
+						[(#GET{oeuvre}|table_valeur{titre})] : Numéro d'inventaire [(#GET{oeuvre}|table_valeur{numero_inventaire})] <span class="rouge">Non-conforme</span><br/>
+					]
+				]
+			</div>
+		</td></tr>
+	</BOUCLE_oeuvres>
+	</table>
+</B_oeuvres>
+</div>
+
+<style>
+.formulaire_spip {
+    margin: 0px 0px;
+    padding:5px 10px;
+}
+
+table {
+	margin :0px;
+}
+</style>

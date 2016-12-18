@@ -1,0 +1,105 @@
+[(#REM)  <pre>[(#ENV**|unserialize|print_r{1})]</pre>]
+
+<div class='formulaire_spip formulaire_editer formulaire_#FORM formulaire_#FORM-#ENV{id_oeuvre,nouveau}'>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	
+	<form method='post' action='#ENV{action}' enctype=""><div>
+		#ACTION_FORMULAIRE{#ENV{action}}
+		<ul>
+			<li class="editer_parent"><:oeuvre:intertitre_identification:></li>
+			
+			[(#SAISIE{selecteur, catalogue_parent, objet=catalogue, valeur=catalogue|#ID_CATALOGUE, whitelist=#ARRAY{0,catalogue}, label=<:oeuvre:label_id_choisir_catalogue:>})]
+			
+			[(#INFO_NOMENCLATURE_STRICTE{catalogue, #ID_CATALOGUE}|unserialize|table_valeur{auto}|=={Non}|?{
+			
+				#SAISIE{input, numero_inventaire, label=<:oeuvre:label_numero_inventaire:>, class=court},
+			
+				<li>
+				<label for=""><:oeuvre:label_numero_inventaire:></label>
+				<b>#NUMERO_INVENTAIRE</b> (auto)
+				</li>}
+			)]
+
+			[(#SAISIE{input, titre, label=<:oeuvre:label_titre:>})]
+			[(#SAISIE{input, titre_secret, label=<:oeuvre:label_titre_secret:>})]
+			<li>
+				<label for=""><:oeuvre:label_signature_placement:></label>
+				<select name="signature_placement" class="court">
+					<BOUCLE_data1(DATA) {source table, #ENV{signature_placement_opt}}>
+						<option 
+							[(#ENV{signature_placement}|=={#VALEUR}) selected="selected"]
+							[(#ENV{signature_placement}|non) [(#VALEUR|=={Non}|oui) selected="selected"] ] 
+						>#VALEUR</option>
+					</BOUCLE_data1>
+				</select>
+			</li>
+			[(#SAISIE{input, signature_mention, label=<:oeuvre:label_signature_mention:>})]
+
+			[(#SAISIE{date_annee, date_real, label=<:oeuvre:label_date:>})]
+			
+			<li> <label style="font-weight:normal"><:oeuvre:label_date_alternative:></label></li>
+			[(#SAISIE{date_annee, date_estimee_debut, label=<:oeuvre:label_date_estimee_debut:>})]
+			
+			[(#SAISIE{date_annee, date_estimee_fin, label=<:oeuvre:label_date_estimee_fin:>})]
+			
+			<li class="editer_parent"><:oeuvre:intertitre_description:></li>
+			
+			[(#SAISIE{input, periode, label=<:oeuvre:label_periode:>})]
+			
+			[(#SAISIE{input, thematique, label=<:oeuvre:label_thematique:>})]
+			
+			[(#SAISIE{textarea, notice_courte, label=<:oeuvre:label_notice_courte:>, rows=2})]
+			[(#SAISIE{selecteur_article, id_notice_longue, label=<:oeuvre:label_id_notice_longue:>, valeur=[(#ID_NOTICE_LONGUE|unserialize)], multiple=oui})]
+			[(#SAISIE{textarea, notice_longue, label=<:oeuvre:label_notice_longue:>, rows=7})]
+			
+			<li class="editer_parent"><:oeuvre:intertitre_caracteristiques:></li>
+			
+			[(#SAISIE{input, technique, label=<:oeuvre:label_technique:>})]
+			[(#SAISIE{input, support, label=<:oeuvre:label_support:>})]
+			[(#SAISIE{input, hauteur, label=<:oeuvre:label_hauteur:>, class=court})]
+			[(#SAISIE{input, largeur, label=<:oeuvre:label_largeur:>, class=court})]
+
+			<li>
+				<label for=""><:oeuvre:label_inachevee:></label>
+				<input type="checkbox" name="inachevee" value="Oui" [(#ENV{inachevee}|=={Oui}) checked="checked"]/>
+			</li>
+			<li>
+				<label for=""><:oeuvre:label_chassis:></label>
+				<input type="radio" name="chassis" value="Oui" [(#ENV{chassis}|=={Oui}) checked="checked"]/> Oui</input><br/>
+				<input type="radio" name="chassis" value="Non" [(#ENV{chassis}|=={Non}) checked="checked"]/> Non</input>
+			</li>
+			<li>
+				<label for=""><:oeuvre:label_cadre:></label>
+				<input type="radio" name="cadre" value="Oui" [(#ENV{cadre}|=={Oui}) checked="checked"]/> Oui</input><br/>
+				<input type="radio" name="cadre" value="Non" [(#ENV{cadre}|=={Non}) checked="checked"]/> Non</input>
+			</li>
+			
+			<li class="editer_parent"><:oeuvre:intertitre_stock:></li>
+			[(#SAISIE{input, localisation, label=<:oeuvre:label_emplacement:>})]
+			<li>
+				<label for=""><:oeuvre:label_diapo_existe:></label>
+				[(#ENV{diapo_existe}|non|?{
+					<input type="radio" name="diapo_existe" value="1" [(#ENV{diapo_existe}|oui) checked="checked"]> Oui</input><br/>
+					<input type="radio" name="diapo_existe" value="0" [(#ENV{diapo_existe}|non) checked="checked"]> Non</input>,
+					<input type="text" class="court" name="diapo_existe" value="[(#ENV{diapo_existe})]" />})]
+			</li>
+			<li>
+				<label for=""><:oeuvre:label_negatif_existe:></label>
+				[(#ENV{negatif_existe}|non|?{
+					<input type="radio" name="negatif_existe" value="1" [(#ENV{negatif_existe}|oui) checked="checked"]> Oui</input><br/>
+					<input type="radio" name="negatif_existe" value="0" [(#ENV{negatif_existe}|non) checked="checked"]> Non</input>,
+					<input type="text" name="negatif_existe" value="[(#ENV{negatif_existe})]" class="court"/>})]
+			</li>
+			
+			<li class="editer_parent"><:oeuvre:intertitre_historique:></li>
+			[(#SAISIE{selecteur, id_oeuvres_liees, objet=oeuvres, valeur=[(#ID_OEUVRES_LIEES|unserialize)], whitelist=#ARRAY{0,oeuvre}, label=<:oeuvre:label_id_oeuvres_liees:>, multiple=oui})]
+			
+			[(#SAISIE{textarea, publication, label=<:oeuvre:label_publication:>, rows=2})]
+		</ul>
+		
+		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+		<!--extra-->
+		<p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
+	</div></form>
+</div>

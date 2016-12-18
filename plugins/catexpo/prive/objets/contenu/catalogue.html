@@ -1,0 +1,50 @@
+<BOUCLE_catalogue(CATALOGUES){id_catalogue}>
+
+[<div class="champ contenu_titre[ (#TITRE*|strlen|?{'',vide})]">
+	<label><:catalogue:label_titre:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{titre} titre'>(#TITRE)</span>
+</div>]
+
+[(#SET{redirect,#URL_ECRIRE{catalogue, id_catalogue=#ID_CATALOGUE}})]
+
+<INCLURE{fond=prive/objets/liste/oeuvres, redirect=#GET{redirect}, env, ajax, sinon=<:oeuvre:info_aucun_oeuvre:>}>
+
+
+
+<div class="nettoyeur"></div>
+
+[<div class="champ contenu_versions[ (#VERSIONS*|strlen|?{'',vide})]" style="margin-top:5px;">
+	<label><:catalogue:label_versions:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{versions} versions'>(#VERSIONS)</span>
+</div>]
+
+[(#NOMENCLATURE_EXISTANTE|substr{0,2}|=={a:}|oui) [(#SET{nomenc_exist,[(#NOMENCLATURE_EXISTANTE|unserialize)]})]]
+<div class="champ contenu_nomenclature_existante[ (#NOMENCLATURE_EXISTANTE*|strlen|?{'',vide})]" style="margin-top:5px;">
+	<label><:catalogue:label_nomenclature_existante:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{nomenclature_existante} nomenclature_existante'>
+		<BOUCLE_data2(DATA) {source tableau, #GET{nomenc_exist}}>
+			[<b> [(#CLE|substr{0,1})] :</b> (#VALEUR)]
+		</BOUCLE_data2>
+	</span>
+</div>
+
+[(#NOMENCLATURE_STRICTE|substr{0,2}|=={a:}|oui) [(#SET{nomenc_stricte,[(#NOMENCLATURE_STRICTE|unserialize)]})]]
+<div class="champ contenu_nomenclature_stricte[ (#NOMENCLATURE_STRICTE*|strlen|?{'',vide})]" style="margin-top:5px;">
+	<label><:catalogue:label_nomenclature_stricte:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{nomenclature_stricte} nomenclature_stricte'>
+		<BOUCLE_data1(DATA) {source tableau, #GET{nomenc_stricte}}>
+			[<b> [(#CLE|substr{0,1})] :</b> (#VALEUR)]
+		</BOUCLE_data1>
+	</span>
+</div>
+
+</BOUCLE_catalogue>
+
+[(#URL_ECRIRE{verifier_inventaire, id_catalogue=#ID_CATALOGUE}|parametre_url{redirect,#GET{redirect}}|icone_verticale{<:catalogue:icone_verifier_inventaire:>,catalogue,edit,right})]
+
+
+<style>
+.liste-objets {
+    margin: 0px 0px 2.075em 0px;
+}
+</style>

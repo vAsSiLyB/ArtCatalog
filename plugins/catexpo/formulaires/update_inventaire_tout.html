@@ -1,0 +1,33 @@
+<div class="formulaire_spip">
+<form method='post' action='#ENV{action}' enctype="multipart/form-data">
+	#ACTION_FORMULAIRE{#ENV{action}}
+	
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>
+		<p class="boutons">
+			<input type="hidden" name="reformer_docs" value="true"/>
+			<input type='submit' class='submit' value='<:catexpo:bouton_reformer_docs:>' />
+		</p>
+	]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	
+	<:catexpo:actions_rapides_inventaire:><br/>
+		
+	<input type="radio" name="corriger_numeros" id="corriger_numeros" value="numeros"> 
+		<label for="corriger_numeros"> <:catexpo:corriger_numeros_ordre:></label>
+	</input><br/>
+	
+	<input type="radio" name="corriger_numeros" id="corriger_tout" value="tout">
+		<label for="corriger_tout"> <:catexpo:corriger_numeros_inventaire_tous:></label>
+	</input><br/>
+	
+	<p class="boutons">
+		<input type='submit' class='submit' value='<:catexpo:bouton_reformer:>' />
+	</p>
+</form>
+</div>
+
+<style>
+.formulaire_spip .boutons {
+    padding:5px 10px;
+}
+</style>

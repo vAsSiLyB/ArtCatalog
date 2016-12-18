@@ -1,0 +1,49 @@
+#SET{z-index,51}
+#SET{max_width,707}
+#SET{max_height,577}
+#SET{effect_array,#ARRAY}
+
+[(#ENV{mode}|=={fullscreen}|oui) #SET{max_width,1920} #SET{max_height,1080}]
+[(#ENV{mode}|=={inventaire}|oui) #SET{max_width,1280} #SET{max_height,720}]
+[(#ENV{mode}|=={compare}|oui) #SET{max_width,607} #SET{max_height,720}]
+#SET{img_check,#ARRAY}
+			{	
+				"mode":"#ENV{mode}",
+				"width":"#GET{max_width}",
+				"height":"#GET{max_height}",
+				<B_documents_oeuvres>
+				"versions_MAIN":{
+				<BOUCLE_documents_oeuvres(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version} {inverse}>
+					#SET{z-index,#GET{z-index}|moins{1}}
+					[(#ENV{mode}|=={inventaire}|ou{[(#ENV{mode}|=={compare})]}|oui)
+						[(#VERSION|match{REF}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,REF}}}]
+						[(#VERSION|match{fluo1}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,fluo}}}]
+						[(#VERSION|match{rouge}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,rouge}}}]
+						[(#VERSION|match{or}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,or}}}]
+						[(#VERSION|match{vert}|oui)#SET{img_check,#GET{img_check}|push{#ARRAY{0,#VERSION,1,vert}}}]
+					]
+					
+					[(#SET{rapport,[(#HAUTEUR|div{#LARGEUR})]})]
+					[(#SET{height,#GET{max_height}})] [(#SET{width,[(#GET{max_height}|div{#GET{rapport}}|round{})]})]
+					[(#GET{width}|>={#GET{max_width}}|?{[(#SET{width,#GET{max_width}})] [(#SET{height,[(#GET{width}|mult{#GET{rapport}}|round{})]})] })]
+					
+					[(#ENV{appel_prive}|?{[(#SET{chemin_fichier,[../(#FICHIER|image_reduire{#GET{width},#GET{height}}|extraire_attribut{src})]})],[(#SET{chemin_fichier,[(#FICHIER|image_reduire{#GET{width},#GET{height}}|extraire_attribut{src})]})] })]
+					[(#SET{effect_array,[(#GET{effect_array}|push{ [(#ID_VIGNETTE)] })]})]
+			
+					"[(#COMPTEUR_BOUCLE|moins{1})]": {
+						"version":"[(#VERSION|supprimer_numero)][(#VERSION|supprimer_numero|=={FX}|oui)#COMPTEUR_BOUCLE]",
+						"zIndex":"#GET{z-index}",
+						"src":"#GET{chemin_fichier}",
+						"width":"#GET{width}",
+						"height":"#GET{height}"
+						}[(#COMPTEUR_BOUCLE|!={#TOTAL_BOUCLE}|?{",",[,"length":"(#TOTAL_BOUCLE)"]})]
+				</BOUCLE_documents_oeuvres>
+				},
+				"canvas":{
+					"id":"oeuvre_canvas_#ID_OEUVRE",
+					"width":"#GET{width}",
+					"height":"#GET{height}",
+					"zIndex":64
+					}
+				</B_documents_oeuvres>
+			}

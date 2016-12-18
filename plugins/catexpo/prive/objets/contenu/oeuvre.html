@@ -1,0 +1,131 @@
+<BOUCLE_oeuvre(OEUVRES){id_oeuvre}>
+
+<h4 class="titrem"><:oeuvre:intertitre_identification:></h4>
+
+[<div class="champ contenu_numero_inventaire[ (#NUMERO_INVENTAIRE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_numero_inventaire:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{numero_inventaire} numero_inventaire'>(#NUMERO_INVENTAIRE)</span>
+</div>]
+
+[<div class="champ contenu_thematique[ (#THEMATIQUE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_thematique:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{thematique} thematique'>(#THEMATIQUE)</span>
+</div>]
+
+[<div class="champ contenu_titre[ (#TITRE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_titre:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{titre} titre'>(#TITRE)</span>
+</div>]
+
+[<div class="champ contenu_titre_secret[ (#TITRE_SECRET*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_titre_secret:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{titre_secret} titre_secret'>(#TITRE_SECRET)</span>
+</div>]
+
+[<div class="champ contenu_signature_mention[ (#SIGNATURE_MENTION*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_signature_mention:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{signature_mention} signature_mention'>(#SIGNATURE_MENTION)</span>
+</div>]
+
+[<div class="champ contenu_signature_placement[ (#SIGNATURE_PLACEMENT*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_signature_placement:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{signature_placement} signature_placement'>(#SIGNATURE_PLACEMENT)</span>
+</div>]
+
+[<div class="champ contenu_date_real[ (#DATE_REAL*|strlen|?{'',vide})]">
+	<label><h5><:oeuvre:label_date_real:></h5> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{date_real} date_real'>(#DATE_REAL|affdate{annee}|!={0000}|oui) [(#DATE_REAL|affdate{annee})]</span>
+</div>]
+
+[<div class="champ contenu_date_estimee_debut[ (#DATE_ESTIMEE_DEBUT*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_date_estimee_debut:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{date_estimee_debut} date_estimee_debut'>(#DATE_ESTIMEE_DEBUT|affdate{annee}|!={0000}|oui) [(#DATE_ESTIMEE_DEBUT|affdate{annee})]</span>
+</div>]
+
+[<div class="champ contenu_date_estimee_fin[ (#DATE_ESTIMEE_FIN*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_date_estimee_fin:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{date_estimee_fin} date_estimee_fin'>(#DATE_ESTIMEE_FIN|affdate{annee}|!={0000}|oui) [(#DATE_ESTIMEE_FIN|affdate{annee})]</span>
+</div>]
+
+<h4 class="titrem"><:oeuvre:intertitre_description:></h4>
+
+[<div class="champ contenu_notice_courte[ (#NOTICE_COURTE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_notice_courte:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{notice_courte} notice_courte'>(#NOTICE_COURTE)</span>
+</div>]
+
+<B_notice_longue>
+	<div class="champ contenu_id_notice_longue ">
+	[(#ID_NOTICE_LONGUE|unserialize|is_array|oui) [(#SET{id_article,[(#ID_NOTICE_LONGUE|unserialize|nettoyer_array_picker|table_valeur{0})]})]]
+		<BOUCLE_notice_longue(ARTICLES) {id_article=#GET{id_article}}>
+			<label><:oeuvre:label_notice_longue:> : </label>
+			<span dir='#LANG_DIR' class='#EDIT{notice_longue} notice_longue'>[(#TEXTE|couper{270})]</span>
+		</BOUCLE_notice_longue>
+	</div>
+</B_notice_longue>
+
+[<div class="champ contenu_notice_longue[ (#NOTICE_LONGUE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_notice_longue:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{notice_longue} notice_longue'>(#NOTICE_LONGUE)</span>
+</div>]
+
+<h4 class="titrem"><:oeuvre:label_id_oeuvres_liees:></h4>
+
+[(#ID_OEUVRES_LIEES|unserialize|is_array|oui) [(#SET{oeuvres_liees,[(#ID_OEUVRES_LIEES|unserialize|nettoyer_array_picker)]})] ]
+<BOUCLE_oeuvres_liees(OEUVRES) {id_oeuvre IN #GET{oeuvres_liees}}>
+	<BOUCLE_vignette(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version, date} {0,1}>
+		[(#SET{logo_oeuvre,[(#LOGO_DOCUMENT)]})]
+	</BOUCLE_vignette>
+	<div class="oeuvre_vignette" style="float:none; height:auto;"><a href="#URL_ECRIRE{oeuvre, id_oeuvre=#ID_OEUVRE}" title="#NUMERO_INVENTAIRE">#GET{logo_oeuvre}<br/>[(#TITRE|sinon{#TITRE_SECRET})]</a></div>
+</BOUCLE_oeuvres_liees>
+
+<h4 class="titrem"><:oeuvre:intertitre_caracteristiques:></h4>
+
+[<div class="champ contenu_support[ (#SUPPORT*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_support:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{support} support'>(#SUPPORT)</span>
+</div>]
+
+[<div class="champ contenu_hauteur[ (#HAUTEUR*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_hauteur:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{hauteur} hauteur'>(#HAUTEUR)</span>
+</div>]
+
+[<div class="champ contenu_largeur[ (#LARGEUR*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_largeur:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{largeur} largeur'>(#LARGEUR)</span>
+</div>]
+
+[<div class="champ contenu_inachevee[ (#INACHEVEE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_inachevee:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{inachevee} inachevee'>(#INACHEVEE)</span>
+</div>]
+
+[<div class="champ contenu_chassis[ (#CHASSIS*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_chassis:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{chassis} chassis'>(#CHASSIS)</span>
+</div>]
+
+[<div class="champ contenu_cadre[ (#CADRE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_cadre:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{cadre} cadre'>(#CADRE)</span>
+</div>]
+
+<h4 class="titrem"><:oeuvre:intertitre_stock:></h4>
+
+<div class="champ contenu_localisation">
+	<label><:oeuvre:label_emplacement:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{localisation} localisation'>[(#LOCALISATION|oui|?{#LOCALISATION,inconnue})]</span>
+</div>
+
+[<div class="champ contenu_diapo_existe[ (#DIAPO_EXISTE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_diapo_existe:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{diapo_existe} diapo_existe'>(#DIAPO_EXISTE)</span>
+</div>]
+
+[<div class="champ contenu_negatif_existe[ (#NEGATIF_EXISTE*|strlen|?{'',vide})]">
+	<label><:oeuvre:label_negatif_existe:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{negatif_existe} negatif_existe'>(#NEGATIF_EXISTE)</span>
+</div>]
+
+</BOUCLE_oeuvre>

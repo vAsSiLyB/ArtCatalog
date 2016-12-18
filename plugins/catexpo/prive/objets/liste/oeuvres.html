@@ -1,0 +1,53 @@
+[(#SET{defaut_tri,#ARRAY{
+	id_oeuvre,1,
+	numero_ordre,1,
+	titre,1, 
+	date,-1,
+	points,-1
+}})]<B_liste_oeuvres>
+#ANCRE_PAGINATION
+<div class="liste-objets oeuvres">
+<table class='spip liste'>
+	[<caption><strong class="caption">(#ENV*{titre,#GRAND_TOTAL|singulier_ou_pluriel{oeuvre:info_1_oeuvre,oeuvre:info_nb_oeuvres}})</strong></caption>]
+	<thead>
+		<tr class='first_row'>
+			<th class='picto' scope='col'></th>
+			<th class='titre' scope='col'>[(#TRI{titre,<:oeuvre:label_titre:>,ajax})]</th>
+			<th class='date' scope='col'>[(#TRI{date,<:date:>,ajax})]</th>
+			<th class='nnumero_inventaire' scope='col'>[(#TRI{numero_inventaire,<:oeuvre:label_numero_inventaire:>,ajax})]</th>
+			<th class='' scope='col'>[(#TRI{id,id,ajax})]</th>
+			<th class='id' scope='col'>[(#TRI{id_oeuvre,<:oeuvre:label_modifier_oeuvre:>,ajax})]</th>
+			<th class='numero_ordre' scope='col' style="display:none;">[(#TRI{numero_ordre,<:oeuvre:label_numero_ordre:>,ajax})]</th>
+		</tr>
+	</thead>
+	<tbody>
+	<BOUCLE_liste_oeuvres(OEUVRES){id_catalogue?}{id_mot?}{id_auteur?}{where?}{recherche?}{tri #ENV{par,numero_inventaire},#GET{defaut_tri}}{par id_oeuvre}{par titre}{pagination #ENV{nb,10}}>
+	[(#SET{redirect,[(#ENV{redirect,#SELF})] })]
+		<BOUCLE_vignette(DOCUMENTS) {id_oeuvre=#ID_OEUVRE} {par num version} {0,1}>
+			[(#SET{logo_oeuvre,[(#LOGO_DOCUMENT|image_reduire{51,44})]})]
+			[(#SET{url_vignette,[(#FICHIER|image_reduire{720,720}|extraire_attribut{src})]})]
+		</BOUCLE_vignette>
+			[(#SET{logo_oeuvre,""})]
+		<//B_vignette>
+		<tr class='[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]'>
+			<td class='picto'><a href="#GET{url_vignette}" class="mediabox" rel="toiles">[(#GET{logo_oeuvre}|sinon{[(#CHEMIN_IMAGE{oeuvre-16.png}|balise_img)]})]</td></a>
+			<td class='titre principale'><a href="[(#ID_OEUVRE|generer_url_entite{oeuvre})]" title="<:info_numero_abbreviation|attribut_html:> #ID_OEUVRE">[(#RANG). ][(#TITRE|sinon{#TITRE_SECRET})]</a></td>
+			<td class='date secondaire'>[(#DATE_REAL|annee|!={0000}|?{[(#DATE_REAL|annee)], ''})]</td>
+			<td class='numero_inventaire secondaire'>[(#NUMERO_INVENTAIRE)]</td> 
+			<td class='secondaire'>[(#ID_OEUVRE)]</td>
+			<td class='id modifier'>[(#AUTORISER{modifier,oeuvre,#ID_OEUVRE}|?{
+				<a href="[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#ID_OEUVRE}|parametre_url{id_catalogue,#ID_CATALOGUE} )]" title="">
+					<img src="../plugins/catexpo/prive/themes/spip/images/oeuvre-edit-32.png">
+				</a>,
+				#ID_OEUVRE
+			})]</td>
+		</tr>
+	</BOUCLE_liste_oeuvres>
+	</tbody>
+</table>
+[<p class='pagination'>(#PAGINATION{prive})</p>]
+</div>
+
+</B_liste_oeuvres>[
+<div class="liste-objets oeuvres caption-wrap"><strong class="caption">(#ENV*{sinon,''})</strong></div>
+]<//B_liste_oeuvres>

@@ -1,0 +1,7 @@
+#HTTP_HEADER{Content-Type: application/json;charset=utf8}
+#HTTP_HEADER{Vary: Accept-Encoding}
+{"manifest":[
+	{"id":"expoToPreload", "src":"[(#PRODUIRE{fond=js/expo_show.js}|url_absolue)]", "type":"javascript"},
+	{"id":"expo_loader", "src":"[(#CHEMIN{js/expo_loader.js}|url_absolue)]", "type":"javascript"}
+	]
+}

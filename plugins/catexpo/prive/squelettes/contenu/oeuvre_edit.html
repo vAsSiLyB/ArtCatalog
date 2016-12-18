@@ -1,0 +1,42 @@
+[(#ID_OBJET|oui)
+	[(#AUTORISER{modifier,oeuvre,#ID_OEUVRE}|sinon_interdire_acces)]
+][(#ID_OBJET|non)
+	[(#AUTORISER{creer,oeuvre}|sinon_interdire_acces)]
+]
+
+
+#SET{redirect,#ENV{lier_trad,#ID_OEUVRE}|?{#ENV{lier_trad,#ID_OEUVRE}|generer_url_entite{oeuvre},#URL_ECRIRE{oeuvres}}}
+#SET{redirect,#ENV{redirect,#ID_OEUVRE|generer_url_entite{oeuvre}}}
+[(#ENV{id_catalogue}|oui)[(#SET{redirect,[(#ENV{id_catalogue}|generer_url_entite{catalogue})]})]]
+
+<div class='cadre-formulaire-editer'>
+<div class="entete-formulaire">
+
+	[(#GET{redirect}|icone_verticale{Retour,oeuvre,'',left retour[(#ENV{retourajax,''}|oui)ajax preload]})]
+
+	[
+		[(#ID_OEUVRE|?{<:oeuvre:icone_modifier_oeuvre:>,<:oeuvre:icone_creer_oeuvre:>})]
+		<h1>(#ENV{titre,#INFO_TITRE{oeuvre,#ID_OEUVRE}|sinon{<:info_sans_titre:>}})</h1>
+	]
+	
+	[(#ENV{ajouter_documents}|=={oui}|oui)
+	<div class="clearfix"></div>
+	<div class="formulaire_spip">
+		<p style="margin-top:12px;"><:oeuvre:message_ajout_documents:></:oeuvre:message_ajout_documents:></p>
+		<p class="boutons"><a href="#GET{redirect}"><button>Terminé</button></a></p>
+	</div>
+	]
+</div>
+
+[(#ENV{retourajax,''}|oui)
+	#SET{redirect,'javascript:if (window.jQuery) jQuery(".entete-formulaire .retour a").followLink();'}
+	<div class="ajax">
+]		
+		
+		[(#FORMULAIRE_EDITER_OEUVRE{#ENV{id_oeuvre,oui}, #ENV{id_catalogue}, #GET{redirect}, #ENV{associer_objet}, #ENV{lier_trad}})]
+		
+[(#ENV{retourajax,''}|oui)
+	</div>
+	<script type="text/javascript">/*<!\[CDATA\[*/reloadExecPage('#ENV{exec}');/*\]\]>*/</script>
+]
+</div>

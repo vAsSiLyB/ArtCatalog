@@ -1,0 +1,28 @@
+[(#SET{left,'143'})]
+[(#ENV{mode}|=={fullscreen}|oui) #SET{left,0}]
+{
+	"conteneur":{
+		"class":"light_show_container"
+		},
+	"oeuvres":{
+	<BOUCLE_oeuvres(OEUVRES) {id_exposition=#ENV{id_expo}} {par rang} >
+		"[(#COMPTEUR_BOUCLE|moins{1})]":{
+			"id_oeuvre":#ID_OEUVRE,
+			"titre":"[(#TITRE|sinon{#TITRE_SECRET})]",
+			"hauteur":"#HAUTEUR",
+			"largeur":"#LARGEUR",
+			"ratio":"[(#LARGEUR|div{#HAUTEUR})]",
+			"conteneur":{
+				"DOMid":"oeuvre_#ID_OEUVRE",
+				"class":"oeuvre_carousel index#COMPTEUR_BOUCLE [(#COMPTEUR_BOUCLE|=={1}|oui) current]",
+				"highlight":"highlight_oeuvre[(#COMPTEUR_BOUCLE|moins{1})]",
+				"style":{
+					"left":"#GET{left}px"
+					}
+				},
+			"objets":[(#MODELE{oeuvre_JSON.json}{id=#ID_OEUVRE, mode=#ENV{mode}})]
+			}[(#COMPTEUR_BOUCLE|!={#TOTAL_BOUCLE}|oui),]
+		[(#ENV{mode}|=={fullscreen}|?{ [(#SET{left,[(#GET{left}|plus{4096})]})], [(#SET{left,[(#GET{left}|plus{1440})]})] })]
+	</BOUCLE_oeuvres>
+		}
+	}

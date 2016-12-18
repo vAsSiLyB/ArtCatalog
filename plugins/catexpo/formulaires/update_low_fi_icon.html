@@ -1,0 +1,22 @@
+[(#REM)<pre>[(#ENV**|unserialize|print_r{1})]</pre>]
+<div class="">
+<form class="update_doc" action="#ENV{action}" method="post" enctype="multipart/form-data">
+
+	[(#ENV{message_ok}|oui) 
+		<div class="oeuvre_vignette_dispositif">#ENV{dispositif_annee}</div>
+		<div class="img_superpose vignette_dia" style="">
+			<span class="vertical_helper"></span><img src="../IMG/#ENV{message_ok}"/>
+		</div>
+		<div class="img_superpose vignette_dia" style="margin-top:-90px; opacity:.2; [(#ENV{dispositif_annee}|substr{0,8}|=={compact }|oui)opacity:1;]">
+			<span class="vertical_helper"></span><img width="90px" height="90px" src="../plugins/catexpo/images/low_fi_icon.png"/>
+		</div>
+	]
+
+	[(#ACTION_FORMULAIRE{#ENV{action}})]
+	[(#ENV{dispositif_annee}|match{compact}|oui)
+		<div class="update_low_fi">
+		<input type="image" name="action_form" value="[(#ENV{dispositif_annee}|substr{0,8}|=={compact_}|?{cover_doc,uncover_doc})]" class="" id="update_low_fi_icon_#ENV{id_document}" src="../plugins/catexpo/images/camera_icon.png" sytle="[(#ENV{dispositif}|=={compact_}|oui)opacity:1;]" title="afficher l'image low_fi"></input>
+		</div>
+	]
+</form>
+</div>

@@ -1,0 +1,31 @@
+[(#ID_OBJET|oui)
+	[(#AUTORISER{modifier,oeuvre,#ID_EXPOSITION}|sinon_interdire_acces)]
+][(#ID_OBJET|non)
+	[(#AUTORISER{creer,exposition}|sinon_interdire_acces)]
+]
+
+
+#SET{redirect,#ENV{redirect}|sinon{#ENV{lier_trad,#ID_EXPOSITION}|?{#ENV{lier_trad,#ID_EXPOSITION}|generer_url_entite{exposition},#URL_ECRIRE{expositions}}}}
+
+<div class='cadre-formulaire-editer'>
+<div class="entete-formulaire">
+
+	[(#GET{redirect}|icone_verticale{Retour,exposition,'',left retour[(#ENV{retourajax,''}|oui)ajax preload]})]
+
+	[
+		[(#ID_EXPOSITION|?{<:exposition:icone_modifier_exposition:>,<:exposition:icone_creer_exposition:>})]
+		<h1>(#ENV{titre,#INFO_TITRE{exposition,#ID_EXPOSITION}|sinon{<:info_sans_titre:>}})</h1>
+	]
+</div>
+
+[(#SET{redirect,[(#ENV{redirect,[(#ID_EXPOSITION|generer_url_entite{exposition})] })] })]
+[(#ENV{retourajax,''}|oui)
+	#SET{redirect,'javascript:if (window.jQuery) jQuery(".entete-formulaire .retour a").followLink();'}
+	<div class="ajax">
+]
+		[(#FORMULAIRE_EDITER_EXPOSITION{#ENV{id_exposition,oui}, #GET{redirect}, #ENV{associer_objet}, #ENV{lier_trad}})]
+[(#ENV{retourajax,''}|oui)
+	</div>
+	<script type="text/javascript">/*<!\[CDATA\[*/reloadExecPage('#ENV{exec}');/*\]\]>*/</script>
+]
+</div>

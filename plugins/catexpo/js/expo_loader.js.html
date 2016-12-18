@@ -1,0 +1,12 @@
+#HTTP_HEADER{Content-Type:text/javascript;charset=utf8}
+#HTTP_HEADER{Vary: Accept-Encoding}
+
+var expo_manifest=[];
+$.each(expo_to_preload,function(key,id_expo) {
+	expo_manifest.push({"id":'JSON_expo_'+key,"src":"spip.php?page=modeles/expo_JSON&id_expo="+id_expo, "type":"json"});
+	expo_manifest.push({"id":'JSON_expo_fullScreen'+key,"src":"spip.php?page=modeles/expo_JSON&id_expo="+id_expo+"&mode=fullscreen", "type":"json"});
+});
+var catalog=[
+             {id:'images_oeuvres', src:	''}
+];
+//preload.loadManifest(expo_manifest);

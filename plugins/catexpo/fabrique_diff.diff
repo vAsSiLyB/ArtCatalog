@@ -1,0 +1,18 @@
+diff -r -x . -x .. -x fabrique_diff.diff -x fabrique_catexpo.php ../plugins/fabrique_auto/.backup/catexpo//base/catexpo.php ../plugins/fabrique_auto/catexpo//base/catexpo.php
+67d66
+< 			"inachev�e"        => "enum('oui','') NOT NULL DEFAULT ''",
+diff -r -x . -x .. -x fabrique_diff.diff -x fabrique_catexpo.php ../plugins/fabrique_auto/.backup/catexpo//lang/oeuvre_fr.php ../plugins/fabrique_auto/catexpo//lang/oeuvre_fr.php
+29d28
+< 	'label_inachev�e' => 'Inachev�e',
+diff -r -x . -x .. -x fabrique_diff.diff -x fabrique_catexpo.php ../plugins/fabrique_auto/.backup/catexpo//paquet.xml ../plugins/fabrique_auto/catexpo//paquet.xml
+12c12
+< 		Paquet genere le 2014-03-20 15:53:00
+---
+> 		Paquet genere le 2014-03-20 16:02:30
+diff -r -x . -x .. -x fabrique_diff.diff -x fabrique_catexpo.php ../plugins/fabrique_auto/.backup/catexpo//prive/objets/contenu/oeuvre.html ../plugins/fabrique_auto/catexpo//prive/objets/contenu/oeuvre.html
+88,92d87
+< [<div class="champ contenu_inachev�e[ (#INACHEV�E*|strlen|?{'',vide})]">
+< 	<label><:oeuvre:label_inachev�e:> : </label>
+< 	<span dir='#LANG_DIR' class='#EDIT{inachev�e} inachev�e'>(#INACHEV�E)</span>
+< </div>]
+<

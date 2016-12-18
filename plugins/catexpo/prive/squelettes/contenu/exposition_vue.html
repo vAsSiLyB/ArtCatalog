@@ -1,0 +1,49 @@
+	#LARGEUR_ECRAN{pleine_largeur}
+	[(#URL_ECRIRE{exposition,id_exposition=#ENV{id_exposition}}|icone_verticale{Retour,exposition,'',left retour[(#ENV{retourajax,''}|oui)ajax preload]})]
+	[(#AUTORISER{modifier,exposition,#ID_EXPOSITION})
+		[(#URL_ECRIRE{exposition_edit,id_exposition=#ID_EXPOSITION}|icone_verticale{<:exposition:icone_modifier_exposition:>,exposition,edit,right, ajax})]
+	]		
+		<BOUCLE_criteres(EXPOSITIONS) {id_exposition} >
+			<B_oeuvres>
+			<h1 class="grostitre clearfix">#TITRE</div>
+			
+			<ul class="oeuvres_critere clearfix">
+			<BOUCLE_oeuvres(OEUVRES) {id_exposition}>
+#SET{z-index,51}
+					<li id="oeuvre|#CLE" class="oeuvre_vignette">
+					<div class="oeuvre_vignette_edit">
+						<a class="editbox" href="[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#CLE}|parametre_url{redirect,[(#URL_ECRIRE{ordonner_inventaire,id_catalogue=#ENV{id_catalogue}})]})]" title="<:oeuvre:label_modifier_oeuvre:>">
+							<img src="../plugins/catexpo/prive/themes/spip/images/oeuvre-edit-16.png"/>
+						</a>
+					</div>
+					<B_documents_oeuvres>
+						<a href="#URL_PAGE{prive/oeuvre_vue,id_oeuvre=#CLE}" class="mediabox">
+						[<div class="oeuvre_vignette_dispositif">
+							(#GET{dispositif})
+						</div>]
+					<BOUCLE_documents_oeuvres(DOCUMENTS) {id_oeuvre=#CLE} {par version}>
+						#SET{z-index,#GET{z-index}|moins{1}}
+						<div class="img_superpose vignette_dia" style="[(#COMPTEUR_BOUCLE|!={1}|oui) margin-top:-90px;] z-index:#GET{z-index}">
+							<!--	Attention : ne pas laisser d'espace entre helper et img-->
+							<span class="vertical_helper"></span>#LOGO_DOCUMENT<br/>
+							[(#COMPTEUR_BOUCLE|=={1}|oui)
+								[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{numero_inventaire})]
+							]
+							[(#REM) <!--  Afficher le dispositif, sinon un point d'interrogation si on n'a pas réussi à transcrire le modele en dispositif
+								et dans les 2 cas, la date, si elle est différente de 0000  -->]
+							#SET{date_digit,#DATE_PRISE_DE_VUE|couper{4}}
+							[(#SET{dispositif,[(#DISPOSITIF|sinon{[(#MODELE_CAM|oui)?]}) [(#GET{date_digit}|!={0000}|oui) [(#GET{date_digit})] ] ]})]
+						</div>
+					</BOUCLE_documents_oeuvres>
+						</a>
+					</B_documents_oeuvres>
+						<div class="img_superpose">
+							<img src="../plugins-dist/medias/prive/vignettes/png.png"/>
+							[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{numero_inventaire})]
+						</div>
+					<//B_documents_oeuvres>
+					</li>
+			</BOUCLE_oeuvres>
+			</ul>
+			</B_oeuvres>
+		</BOUCLE_criteres>

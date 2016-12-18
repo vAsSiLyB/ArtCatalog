@@ -1,0 +1,142 @@
+#SET{data_numeros_ordre,#ENV{id_catalogue}|trouver_numeros_ordre}
+#SET{oeuvres_par_criteres,#GET{data_numeros_ordre}|table_valeur{0}}
+#SET{data_oeuvres,#GET{data_numeros_ordre}|table_valeur{1}}
+#SET{params_oeuvres,#GET{data_numeros_ordre}|table_valeur{2}}
+#SET{anchors,#ARRAY}
+
+[(#SESSION{statut}|couper{1}|<={6}|oui)
+
+<span id="top"></span>
+<BOUCLE_criteres(DATA) {source tableau, #GET{oeuvres_par_criteres}} >
+			<B_oeuvres>
+			[(#SET{anchor,[(#GET{params_oeuvres}|table_valeur{#CLE}|table_valeur{constantes}|implode{', '})]})]
+			#SET{anchors, #GET{anchors}|push{#GET{anchor}}}
+				<h2 id="#GET{anchor}" class="titre_cat">#GET{anchor}</h2>
+				
+				<ul class="oeuvres_critere clearfix">
+			<BOUCLE_oeuvres(DATA) {source tableau, #VALEUR}>
+				#SET{z-index,51}
+					<li id="oeuvre|#CLE" class="oeuvre_vignette" data_highlight="highlight_oeuvre" title="[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{titre})]&nbsp;[((#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{date_real}|annee))]">
+					<div class="oeuvre_vignette_edit">
+						<a class="mediabox" href="[(#URL_ECRIRE{oeuvre_edit,id_oeuvre=#CLE}
+							|parametre_url{redirect,#SELF|url_absolue}
+							|parametre_url{var_zajax,contenu}|parametre_url{popin,oui}
+							)]" title="<:oeuvre:label_modifier_oeuvre:>">
+							<img src="plugins/catexpo/prive/themes/spip/images/oeuvre-edit-16.png"/>
+						</a>
+					</div>
+					#SET{dispositif,""}
+					<B_documents_oeuvres>
+						<a href="[(#URL_PAGE{oeuvre_public,id_oeuvre=#CLE}|parametre_url{unique,[(#VAL{''}|time)]}|parametre_url{ver_mode,recalcul})]" class="mediabox">
+						[<div class="oeuvre_vignette_dispositif">
+							(#GET{dispositif_annee})
+						</div>]
+					<BOUCLE_documents_oeuvres(DOCUMENTS) {id_oeuvre=#CLE} {par num version}>
+						#SET{z-index,#GET{z-index}|moins{1}}
+						<div class="img_superpose vignette_dia" 
+							style="[(#COMPTEUR_BOUCLE|!={1}|oui) margin-top:-90px;] z-index:#GET{z-index}"
+							data-highlight="[(#VERSION|supprimer_numero)]">
+							<!--	Attention : ne pas laisser d'espace entre helper et img-->
+							<span class="vertical_helper"></span>#LOGO_DOCUMENT<br/>
+							[(#COMPTEUR_BOUCLE|=={1}|oui)
+								[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{numero_inventaire})]
+							]
+							[(#REM) <!--  Afficher le dispositif, sinon un point d'interrogation si on n'a pas r�ussi � transcrire le modele en dispositif
+								et dans les 2 cas, la date, si elle est diff�rente de 0000  -->]
+							#SET{date_digit,#DATE_PRISE_DE_VUE|couper{4}}
+							[(#COMPTEUR_BOUCLE|=={1}|oui) [(#SET{dispositif_annee,[(#DISPOSITIF|sinon{[(#MODEL_CAM|oui)?]}) [(#GET{date_digit}|!={0000}|oui) [(#GET{date_digit})] ] ]})] ]
+						</div>
+					</BOUCLE_documents_oeuvres>
+						[(#GET{dispositif_annee}|substr{0,7}|=={compact}|oui) <div class="img_superpose vignette_dia low_fi" id="low_fi_icon_#ID_DOCUMENT" style="[(#GET{dispositif_annee}|substr{0,8}|=={compact_}|oui) opacity:.2;] margin-top:-90px; z-index:52"><img width="92px" height="92px" src="plugins/catexpo/images/low_fi_icon.png"/></div>]
+						</a>
+					</B_documents_oeuvres>
+						<div class="img_superpose">
+							<img src="plugins-dist/medias/prive/vignettes/png.png"/>
+							[(#GET{data_oeuvres}|table_valeur{#CLE}|table_valeur{numero_inventaire})]
+						</div>
+					<//B_documents_oeuvres>
+					</li>
+			</BOUCLE_oeuvres>
+				</ul>
+			</B_oeuvres>
+		</BOUCLE_criteres>
+		
+<div id="catalogue_menu">
+<BOUCLE_menus(DATA) {source tableau, #GET{anchors}}>
+	<div class="anchor_container">
+		<a class="anchor_link" href="##VALEUR"><span class="glyphicon">&#xe041;</span> #VALEUR</a>
+	</div>
+</BOUCLE_menus>
+</div>	
+<div class="bandeau_nav">
+	<h1 class="grostitre">#INFO_TITRE{catalogue,#ENV{id_catalogue}}</h1>
+	<h3 class=""><a class="ajax_catalogue" href="[(#URL_PAGE{catalogue_public, id_catalogue=#ENV{id_catalogue}}|parametre_url{skel,liste})]"><span class="glyphicon">&#xe012;</span> Liste</a></h3>
+[(#REM) |parametre_url{nocache,[(#VAL{''}|time)]} ]
+</div>
+<a id="to_page_top" href="#top" title="Scroll to Top"></a>
+<script type="text/javascript">
+$(document).ready( function(){
+	
+	$('#catalogue_liste_inc').art_analyser({
+		oeuvres_selector:'.oeuvre_detail',
+		oeuvres_children_selector:'.img_superpose.toile_thumb',
+		acion_numeroter:false,
+		action_diapo_compare:false,
+		action_color_changer:true,
+		action_eZoom:false,
+		action_preloader:true
+	});
+	$('.plus').click(function() {
+		$(this).parent().css('height','107px');
+	});
+	$('#to_page_top').click(function(e) {
+		e.originalEvent.preventDefault();
+		if (window.location.href.indexOf('#')!==-1) {
+			window.location.hash='';
+			// slice off the remaining '#' in HTML5:    
+			if (typeof window.history.replaceState == 'function') {
+			  history.replaceState({}, '', window.location.href.slice(0, -1));
+			}
+		}
+		document.getElementById('page').scrollIntoView();
+	});
+	var scroll_button=$('#to_page_top');
+	scroll_button.status='hidden';
+	window.onscroll=function(e) {
+		if ($(window).scrollTop()>window.innerHeight && scroll_button.status=='hidden') {
+			scroll_button.status='visible';
+			scroll_button.animate({'opacity':1}, {duration:500, queue:false});
+		}
+		else if ($(window).scrollTop()<window.innerHeight && scroll_button.status=='visible') {
+			scroll_button.status='hidden';
+			scroll_button.animate({'opacity':0}, {duration:500, queue:false});
+		}
+	};
+	$('#catalogue_menu').show().animate({'opacity':1},1024, 'easeInOutCubic');
+	
+	if (typeof ajax_prepare==='function') {
+// 		ajax_prepare();
+	}
+});
+
+<!-- Mediabox  with onClosed callback -->
+var options = {
+		transition:box_settings.trans,
+		speed:box_settings.speed,
+		maxWidth:box_settings.maxW,
+		maxHeight:box_settings.maxH,
+		minWidth:box_settings.minW,
+		minHeight:box_settings.minH,
+		opacity:box_settings.opa,
+		slideshowSpeed:box_settings.ssSpeed,
+		slideshowStart:box_settings.str_ssStart,
+		slideshowStop:box_settings.str_ssStop,
+		current:box_settings.str_cur,
+		previous:box_settings.str_prev,
+		next:box_settings.str_next,
+		close:box_settings.str_close,
+		splash_url:box_settings.splash_url
+};
+$('.mediabox').colorbox(jQuery.extend({}, options, {fixed:true,slideshow:true,slideshowAuto:false,onClosed:function() {$(".zoomContainer").remove();}}));
+
+</script>]

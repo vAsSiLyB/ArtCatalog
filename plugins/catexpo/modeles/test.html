@@ -1,0 +1,2 @@
+			[(#GET{width}|>={#GET{max_width}}|?{[(#SET{height,[(#GET{max_width}|div{#GET{rapport}})]})] [(#SET{width,[(#GET{height}|div{#GET{rapport}})]})]})]
+			[(#GET{height}|>={#GET{max_height}}|?{[(#SET{width,[(#GET{max_height}|div{#GET{rapport}})]})] [(#SET{height,[(#GET{width}|div{#GET{rapport}})]})] })]

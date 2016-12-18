@@ -1,0 +1,20 @@
+<form method='post' action='#ENV{action}' enctype="">
+	#ACTION_FORMULAIRE{#ENV{action}}
+	<input type="hidden" name="id_oeuvre" value="#ENV{id_oeuvre}"/>
+	<input type="hidden" name="inventaire_correction" value="#ENV{inventaire_correction}"/>
+	
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{message_ok}|non)
+		<p class="boutons" style="background:none;">
+			<span style="float:left">Voulez-vous attribuer le numero d'inventaire <span class="bleu">normalisé</span> : <span class="bleu"><b>#ENV{inventaire_correction}</b></span> ?</span>
+			<input type='submit' class='submit' value='<:catalogue:bouton_mettre_a_jour:>' />
+		</p>
+	]
+</form>
+
+<style>
+.formulaire_spip .boutons {
+    padding:5px 10px;
+}
+</style>
